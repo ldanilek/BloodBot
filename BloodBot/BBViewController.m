@@ -17,6 +17,8 @@
 
     // Configure the view.
     SKView * skView = (SKView *)self.view;
+    
+    //I think these are for debugging
     skView.showsFPS = YES;
     skView.showsNodeCount = YES;
     
@@ -35,11 +37,7 @@
 
 - (NSUInteger)supportedInterfaceOrientations
 {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return UIInterfaceOrientationMaskAllButUpsideDown;
-    } else {
-        return UIInterfaceOrientationMaskAll;
-    }
+    return UIInterfaceOrientationMaskLandscape;
 }
 
 - (void)didReceiveMemoryWarning

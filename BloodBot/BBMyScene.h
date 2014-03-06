@@ -10,4 +10,7 @@
 
 @interface BBMyScene : SKScene
 
+@property (strong, nonatomic) SKSpriteNode *player;
+@property (strong, nonatomic) SKSpriteNode *plasma;//blood plasma. contains all nodes in plasma. moves.
+
 @end

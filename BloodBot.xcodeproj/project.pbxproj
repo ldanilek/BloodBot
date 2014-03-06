@@ -131,6 +131,7 @@
 				9BED8B7418C7BD9A004EFAEC /* BBViewController.m */,
 				9BED8B7618C7BD9A004EFAEC /* BBMyScene.h */,
 				9BED8B7718C7BD9A004EFAEC /* BBMyScene.m */,
+				9BED8B9818C7C97F004EFAEC /* Model */,
 				9BED8B7918C7BD9A004EFAEC /* Spaceship.png */,
 				9BED8B7B18C7BD9A004EFAEC /* Images.xcassets */,
 				9BED8B6218C7BD9A004EFAEC /* Supporting Files */,
@@ -165,6 +166,13 @@
 				9BED8B8B18C7BD9B004EFAEC /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9BED8B9818C7C97F004EFAEC /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -10,9 +10,17 @@
 
 @implementation BBAppDelegate
 
++ (void)randomize {
+    int max = (int)[NSDate timeIntervalSinceReferenceDate]%100;
+    for (int i=0; i<max; i++) {
+        rand();
+    }
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    [self.class randomize];
     return YES;
 }
 							
