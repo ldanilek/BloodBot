@@ -47,7 +47,8 @@ static double uniform(double min, double max) {
 @property (strong, nonatomic) NSMutableSet *pathogens;
 
 @property (nonatomic) int pathogensKilled;
-@property (strong, nonatomic) SKSpriteNode *pathogenProportion;
+@property (nonatomic) int pathogensMissed;
+//@property (strong, nonatomic) SKSpriteNode *pathogenProportion;
 @property (strong, nonatomic) SKLabelNode *pathogenLabel;
 
 @property double playerPower;
@@ -57,22 +58,23 @@ static double uniform(double min, double max) {
 
 @implementation BBMyScene
 
+/*
 - (SKSpriteNode *)pathogenProportion {
     if (!_pathogenProportion) {
-        _pathogenProportion=[[SKSpriteNode alloc] initWithColor:[SKColor brownColor] size:CGSizeMake(40, 5)];
+        _pathogenProportion=[[SKSpriteNode alloc] initWithColor:[SKColor yellowColor] size:CGSizeMake(40, 5)];
         [self addChild:_pathogenProportion];
         _pathogenProportion.anchorPoint=CGPointMake(1, .5);
         _pathogenProportion.position=CGPointMake(50, 10);
     }
     return _pathogenProportion;
-}
+}*/
 
 - (SKLabelNode *)powerLabel {
     if (!_powerLabel) {
         _powerLabel=[[SKLabelNode alloc] initWithFontNamed:@"Chalkboard"];
-        _powerLabel.fontSize=30;
+        _powerLabel.fontSize=15;
         [self addChild:_powerLabel];
-        _powerLabel.position=CGPointMake(self.size.width-100, 40);
+        _powerLabel.position=CGPointMake(self.size.width-50, 30);
     }
     return _powerLabel;
 }
@@ -80,9 +82,9 @@ static double uniform(double min, double max) {
 - (SKLabelNode *)pathogenLabel {
     if (!_pathogenLabel) {
         _pathogenLabel=[[SKLabelNode alloc] initWithFontNamed:@"Chalkboard"];
-        _pathogenLabel.fontSize=30;
+        _pathogenLabel.fontSize=15;
         [self addChild:_pathogenLabel];
-        _pathogenLabel.position=CGPointMake(self.size.width-50, 40);
+        _pathogenLabel.position=CGPointMake(self.size.width-50, 60);
     }
     return _pathogenLabel;
 }
@@ -113,6 +115,7 @@ static double uniform(double min, double max) {
     BBRedBloodCell *redCell = (BBRedBloodCell *)[self.player otherObjectInCollision:contact possibleObjects:self.redBloodCells];
     if (redCell) {
         self.playerPower+=[BBRedBloodCell power];
+        [self.player absorbObject:redCell];
         [redCell remove];
     }
     BBWhiteBloodCell *whiteCell = (BBWhiteBloodCell *)[self.player otherObjectInCollision:contact possibleObjects:self.whiteBloodCells];
@@ -122,7 +125,7 @@ static double uniform(double min, double max) {
     BBPathogen *pathogen = (BBPathogen *)[self.player otherObjectInCollision:contact possibleObjects:self.pathogens];
     if (pathogen) {
         self.pathogensKilled++;
-        //self.pathogensLeft--;
+        [self.player absorbObject:pathogen];
         [pathogen remove];
     }
     
@@ -135,41 +138,43 @@ static double uniform(double min, double max) {
         pathogen = (BBPathogen *)[whiteCell otherObjectInCollision:contact possibleObjects:self.pathogens];
         if (pathogen) {
             self.pathogensKilled++;
-            //self.pathogensLeft--;
+            [whiteCell absorbObject:pathogen];
             [pathogen remove];
         }
     }
     
-    self.pathogenLabel.text=[NSString stringWithFormat:@"%d", self.pathogensKilled];
-    double proportion = 1.*self.pathogensKilled/self.pathogens.count;
-    [self setProportion:proportion];
+    [self setPathogenGraphics];
 }
 
-- (void)setProportion:(double)proportion {
-    double angle = 2*M_PI-proportion*M_PI;
-    [self.pathogenProportion runAction:[SKAction rotateToAngle:angle duration:.1 shortestUnitArc:YES]];
+- (void)setPathogenGraphics {
+    self.pathogenLabel.text=[NSString stringWithFormat:@"Score: %d", self.pathogensKilled-self.pathogensMissed];
+    /*if (self.pathogens.count) {
+        double proportion = 1.*self.pathogensKilled/self.pathogens.count;
+        double angle = 2*M_PI-proportion*M_PI;
+        [self.pathogenProportion runAction:[SKAction rotateToAngle:angle duration:.1 shortestUnitArc:YES]];
+    }*/
 }
 
 - (void)setPathogensKilled:(int)pathogensKilled {
     _pathogensKilled=pathogensKilled;
-    double proportion = 1.*self.pathogensKilled/self.pathogens.count;
-    [self setProportion:proportion];
+    [self setPathogenGraphics];
 }
 
 - (CGFloat)playerX {
-    return 50;
+    return self.size.width/2;
 }
 
 - (BBRobot *)player {
     if (!_player) {
         _player = [[BBRobot alloc] init];//[[SKSpriteNode alloc] initWithColor:[SKColor grayColor] size:CGSizeMake(10,30)];
+        _player.delegate=self;
     }
     return _player;
 }
 
 - (SKSpriteNode *)plasma {
     if (!_plasma) {
-        _plasma = [[SKSpriteNode alloc] initWithColor:[SKColor yellowColor] size:CGSizeMake(self.frame.size.width*5, self.frame.size.height)];
+        _plasma = [[SKSpriteNode alloc] initWithColor:[SKColor brownColor] size:CGSizeMake(self.frame.size.width*100, self.frame.size.height)];
         _plasma.anchorPoint=CGPointMake(0, .5);
         _plasma.position=CGPointMake(CGRectGetMinX(self.frame), CGRectGetMidY(self.frame));
     }
@@ -177,11 +182,12 @@ static double uniform(double min, double max) {
 }
 
 - (CGPoint)randomRightPlasmaLocation {
-    return [self convertPoint:CGPointMake(self.size.width, uniform(15, self.size.height-15)) toNode:self.plasma];
+    return [self convertPoint:CGPointMake(self.size.width+40, uniform(15, self.size.height-15)) toNode:self.plasma];
 }
 
 - (void)addRedBloodCell {
     BBRedBloodCell *red = [[BBRedBloodCell alloc] init];
+    red.delegate=self;
     red.position=[self randomRightPlasmaLocation];
     //get it going.
     //change momentum. starting momentum is 0. calculate ending momentum
@@ -196,6 +202,7 @@ static double uniform(double min, double max) {
 
 - (void)addWhiteBloodCell {
     BBWhiteBloodCell *white = [[BBWhiteBloodCell alloc] init];
+    white.delegate=self;
     white.position=[self randomRightPlasmaLocation];
     
     [white addToNode:self.plasma];
@@ -207,24 +214,25 @@ static double uniform(double min, double max) {
 
 - (void)addPathogen {
     BBPathogen *pathogen = [[BBPathogen alloc] init];
+    pathogen.delegate=self;
     pathogen.position=[self randomRightPlasmaLocation];
     
     [pathogen addToNode:self.plasma];
     [self.pathogens addObject:pathogen];
-    double proportion = 1.*self.pathogensKilled/self.pathogens.count;
-    [self setProportion:proportion];
+    [self setPathogenGraphics];
     
     pathogen.velocity=CGVectorMake(uniform(-60, -100), uniform(-40, 40));
     pathogen.angularVelocity=uniform(-1, 1);
 }
 
-#define MAX_PATHOGENS 50
-//don't keep running after you've dealt with all of the pathogens you will create, but don't create extras
-
-#define WAIT_BETWEEN_ADDING .5
+#define WAIT_BETWEEN_ADDING .2
 //average frequency of adding
 - (double)redCellFrequency {
-    return UIUserInterfaceIdiomPad==UI_USER_INTERFACE_IDIOM()? 4: 2;
+    double freq = UIUserInterfaceIdiomPad==UI_USER_INTERFACE_IDIOM()? 4: 2;
+    if (self.levelType==BBLevelArtery) {
+        freq*=8;
+    }
+    return freq;
 }
 - (double)whiteCellFrequency {
     return UIUserInterfaceIdiomPad==UI_USER_INTERFACE_IDIOM()? .7: .3;
@@ -246,13 +254,13 @@ static double uniform(double min, double max) {
         whiteCells--;
     }
     double pathogens = WAIT_BETWEEN_ADDING * [self pathogenFrequency];
-    while (pathogens > 1 && self.pathogens.count<MAX_PATHOGENS) {
+    while (pathogens > 1) {
         pathogens--;
         [self addPathogen];
     }
     if (uniform(0, 1)<redCells)[self addRedBloodCell];
     if (uniform(0, 1)<whiteCells)[self addWhiteBloodCell];
-    if (uniform(0, 1)<pathogens && self.pathogens.count<MAX_PATHOGENS) {
+    if (uniform(0, 1)<pathogens) {
         [self addPathogen];
     }
 }
@@ -294,7 +302,11 @@ static double uniform(double min, double max) {
 }
 
 - (void)viewDidAppear {
-    [_plasma runAction:[SKAction repeatActionForever:[SKAction moveBy:CGVectorMake(-2000, 0) duration:100]]];
+    int speed = -2000;
+    if (BBLevelArtery==self.levelType) {
+        speed*=10;
+    }
+    [_plasma runAction:[SKAction repeatActionForever:[SKAction moveBy:CGVectorMake(speed, 0) duration:100]]];
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -355,16 +367,15 @@ static double uniform(double min, double max) {
     int newPower = self.playerPower/[BBRedBloodCell power];
     if (prevPower!=newPower) {
         prevPower=newPower;
-        self.powerLabel.text=[NSString stringWithFormat:@"%d", newPower];
+        self.powerLabel.text=[NSString stringWithFormat:@"Power: %d", newPower];
     }
     
     //scene coordinates
-    int MIN_PLASMA_X = -20;
-    int MAX_PLASMA_X = self.size.width+20;
+    int MIN_PLASMA_X = -40;
+    int MAX_PLASMA_X = self.size.width+40;
     
     if ([self convertPoint:self.player.position fromNode:self.plasma].x<MIN_PLASMA_X) {
         [[NSNotificationCenter defaultCenter] postNotificationName:PLAYER_DESTROYED object:nil];
-        [self.player remove];
     }
     
     //remove off-screen objects
@@ -376,6 +387,11 @@ static double uniform(double min, double max) {
                 node.position=[self convertPoint:CGPointMake(MAX_PLASMA_X, point.y) toNode:self.plasma];
             } else {
                 [node removeFromParent];
+                for (BBPathogen *pathogen in self.pathogens) {
+                    if ([pathogen nodeIs:node]) {
+                        self.pathogensMissed++;
+                    }
+                }
             }
             
         }

@@ -13,13 +13,19 @@
 
 @property BOOL opened;
 @property BBMyScene *scene;
+@property BBLevelType levelType;
+
+@property BOOL leaving;
 
 @end
 
 @implementation BBViewController
 
 - (void)playerGone {
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    if (!self.leaving) {
+        [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+        self.leaving=YES;
+    }
 }
 
 - (void)viewDidLoad
@@ -47,6 +53,7 @@
         // Create and configure the scene.
         self.scene = [BBMyScene sceneWithSize:skView.bounds.size];
         self.scene.scaleMode = SKSceneScaleModeAspectFill;
+        self.scene.levelType=self.levelType;
         
         // Present the scene.
         [skView presentScene:self.scene];

@@ -40,14 +40,19 @@
     if (self=[super init]) {
         self.node.physicsBody.contactTestBitMask=1;
         self.node.physicsBody.angularDamping=1;
+        if ([self.delegate levelType]==BBLevelArtery) {
+            self.node.physicsBody.linearDamping=1;
+        }
+        self.node.anchorPoint=CGPointMake(0.5, .5);
     }
     return self;
 }
 
 - (void)applyAcceleration:(CGVector)acceleration {
     CGPoint accelerationPoint = [self.node.scene convertPoint:self.node.position fromNode:self.node.parent];
-    accelerationPoint.x+=[(SKSpriteNode *)self.node size].height/2*cos(self.node.zRotation);
-    accelerationPoint.y+=[(SKSpriteNode *)self.node size].height/2*sin(self.node.zRotation);
+    accelerationPoint.x+=[(SKSpriteNode *)self.node size].width*cos(self.node.zRotation)/2;
+    accelerationPoint.y+=[(SKSpriteNode *)self.node size].width*sin(self.node.zRotation)/2;
+    //acceleration must be constant. do not maintain force with mass increase
     [self.node.physicsBody applyForce:CGVectorMake(acceleration.dx*self.node.physicsBody.mass, acceleration.dy*self.node.physicsBody.mass) atPoint:accelerationPoint];
 }
 

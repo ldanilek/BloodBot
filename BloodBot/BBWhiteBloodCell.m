@@ -20,11 +20,22 @@
 @dynamic node;
 
 - (NSString *)imageName {
-    return @"th.png";
+    return @"WBC.png";
 }
 
-- (double)radius {
-    return 18;
+- (CGPoint *)outline:(int *)count {
+    static CGPoint outline[8];
+    int size = 29;
+    outline[0]=CGPointMake(-13, size);
+    outline[1]=CGPointMake(-size, 13);
+    outline[2]=CGPointMake(-size, -13);
+    outline[3]=CGPointMake(-13, -size);
+    outline[4]=CGPointMake(13, -size);
+    outline[5]=CGPointMake(size, -13);
+    outline[6]=CGPointMake(size, 13);
+    outline[7]=CGPointMake(13, size);
+    *count=8;
+    return outline;
 }
 
 - (instancetype)init {

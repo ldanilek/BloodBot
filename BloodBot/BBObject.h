@@ -9,10 +9,24 @@
 #import <Foundation/Foundation.h>
 #import <SpriteKit/SpriteKit.h>
 
+typedef enum {
+    BBLevelVein,
+    BBLevelArtery,
+} BBLevelType;
+
+
 //abstract class
 //do not interact with this class directly
 
+@protocol BBObjectDelegate <NSObject>
+
+- (BBLevelType)levelType;
+
+@end
+
 @interface BBObject : NSObject
+
+@property id <BBObjectDelegate> delegate;
 
 //designated initializer is init
 
@@ -24,6 +38,7 @@
 
 - (BBObject *)otherObjectInCollision:(SKPhysicsContact *)collision possibleObjects:(NSSet *)objects;
 - (BOOL)partOfCollision:(SKPhysicsContact *)collision;
+- (void)absorbObject:(BBObject *)other;
 
 #ifdef UNLOCK_BBOBJECT_PROTECTED //only define this in implementation files of subclasses
 

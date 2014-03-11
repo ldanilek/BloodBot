@@ -15,6 +15,14 @@
 
 @implementation BBMenuViewController
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    BBLevelType level = BBLevelVein;
+    if ([[sender currentTitle] isEqualToString:@"Artery"]) {
+        level=BBLevelArtery;
+    }
+    [segue.destinationViewController setLevelType:level];
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

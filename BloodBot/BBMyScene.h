@@ -15,10 +15,13 @@
 
 #define PLAYER_DESTROYED @"Player Gone"
 
-@interface BBMyScene : SKScene
+
+@interface BBMyScene : SKScene <BBObjectDelegate>
 
 @property (strong, nonatomic) BBRobot *player;
 @property (strong, nonatomic) SKSpriteNode *plasma;//blood plasma. contains all nodes in plasma. moves.
 - (void)viewDidAppear;
+
+@property (nonatomic) BBLevelType levelType;
 
 @end

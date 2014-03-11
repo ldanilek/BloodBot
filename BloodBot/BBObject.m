@@ -72,6 +72,10 @@
     return nil;
 }
 
+- (void)absorbObject:(BBObject *)other {
+    self.node.physicsBody.mass+=other.node.physicsBody.mass;
+}
+
 - (BOOL)partOfCollision:(SKPhysicsContact *)collision {
     return self.node==collision.bodyA.node || self.node==collision.bodyB.node;
 }
