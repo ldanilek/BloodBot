@@ -41,7 +41,11 @@
 
 - (SKNode *)node {
     if (!_node) {
-        _node = [[SKSpriteNode alloc] initWithImageNamed:[self imageName]];
+        if ([self imageName]) {
+            _node = [[SKSpriteNode alloc] initWithImageNamed:[self imageName]];
+        } else {
+            _node = [[SKSpriteNode alloc] initWithColor:[UIColor whiteColor] size:CGSizeMake(10, 10)];
+        }
         if ([self radius]) {
             _node.physicsBody=[SKPhysicsBody bodyWithCircleOfRadius:[self radius]];
         } else {

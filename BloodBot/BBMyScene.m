@@ -58,17 +58,6 @@ static double uniform(double min, double max) {
 
 @implementation BBMyScene
 
-/*
-- (SKSpriteNode *)pathogenProportion {
-    if (!_pathogenProportion) {
-        _pathogenProportion=[[SKSpriteNode alloc] initWithColor:[SKColor yellowColor] size:CGSizeMake(40, 5)];
-        [self addChild:_pathogenProportion];
-        _pathogenProportion.anchorPoint=CGPointMake(1, .5);
-        _pathogenProportion.position=CGPointMake(50, 10);
-    }
-    return _pathogenProportion;
-}*/
-
 - (SKLabelNode *)powerLabel {
     if (!_powerLabel) {
         _powerLabel=[[SKLabelNode alloc] initWithFontNamed:@"Chalkboard"];
@@ -113,10 +102,18 @@ static double uniform(double min, double max) {
 - (void)didBeginContact:(SKPhysicsContact *)contact {
     //check for objects touched by player
     BBRedBloodCell *redCell = (BBRedBloodCell *)[self.player otherObjectInCollision:contact possibleObjects:self.redBloodCells];
-    if (redCell) {
+    if (redCell && redCell.oxygenated) {
         self.playerPower+=[BBRedBloodCell power];
-        [self.player absorbObject:redCell];
+        redCell.oxygenated=NO;
+        /*CGPoint cellPosition = redCell.position;
+        
+        //[self.player absorbObject:redCell];
         [redCell remove];
+        BBRedBloodCell *deoxygenated = [[BBRedBloodCell alloc] init];
+        [self.redBloodCells addObject:deoxygenated];
+        deoxygenated.delegate=self;
+        [deoxygenated addToNode:self.plasma];
+        deoxygenated.position=cellPosition;*/
     }
     BBWhiteBloodCell *whiteCell = (BBWhiteBloodCell *)[self.player otherObjectInCollision:contact possibleObjects:self.whiteBloodCells];
     if (whiteCell) {
@@ -148,16 +145,23 @@ static double uniform(double min, double max) {
 
 - (void)setPathogenGraphics {
     self.pathogenLabel.text=[NSString stringWithFormat:@"Score: %d", self.pathogensKilled-self.pathogensMissed];
-    /*if (self.pathogens.count) {
-        double proportion = 1.*self.pathogensKilled/self.pathogens.count;
-        double angle = 2*M_PI-proportion*M_PI;
-        [self.pathogenProportion runAction:[SKAction rotateToAngle:angle duration:.1 shortestUnitArc:YES]];
-    }*/
 }
 
+#define PLASMA_MOVE_KEY @"MOVE"
+
 - (void)setPathogensKilled:(int)pathogensKilled {
-    _pathogensKilled=pathogensKilled;
-    [self setPathogenGraphics];
+    if (_pathogensKilled!=pathogensKilled) {
+        _pathogensKilled=pathogensKilled;
+        [self setPathogenGraphics];
+    }
+}
+
+- (void)setPathogensMissed:(int)pathogensMissed {
+    if (_pathogensMissed!=pathogensMissed) {
+        _pathogensMissed=pathogensMissed;
+        [self.plasma removeActionForKey:PLASMA_MOVE_KEY];
+        [self movePlasma];
+    }
 }
 
 - (CGFloat)playerX {
@@ -185,8 +189,14 @@ static double uniform(double min, double max) {
     return [self convertPoint:CGPointMake(self.size.width+40, uniform(15, self.size.height-15)) toNode:self.plasma];
 }
 
+#define VEIN_OXYGENATED .6
+
 - (void)addRedBloodCell {
-    BBRedBloodCell *red = [[BBRedBloodCell alloc] init];
+    BOOL oxygenated = YES;
+    if (self.levelType==BBLevelVein) {
+        oxygenated=uniform(0, 1)<VEIN_OXYGENATED;
+    }
+    BBRedBloodCell *red = [[BBRedBloodCell alloc] initOxygenated:oxygenated];
     red.delegate=self;
     red.position=[self randomRightPlasmaLocation];
     //get it going.
@@ -300,13 +310,18 @@ static double uniform(double min, double max) {
     }
     return self;
 }
-
-- (void)viewDidAppear {
+         
+- (void)movePlasma {
     int speed = -2000;
     if (BBLevelArtery==self.levelType) {
-        speed*=10;
+        speed*=8;
     }
-    [_plasma runAction:[SKAction repeatActionForever:[SKAction moveBy:CGVectorMake(speed, 0) duration:100]]];
+    speed-=100*self.pathogensMissed;
+    [_plasma runAction:[SKAction repeatActionForever:[SKAction moveBy:CGVectorMake(speed, 0) duration:100]] withKey:PLASMA_MOVE_KEY];
+}
+
+- (void)viewDidAppear {
+    [self movePlasma];
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

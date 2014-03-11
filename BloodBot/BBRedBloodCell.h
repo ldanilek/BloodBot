@@ -10,6 +10,11 @@
 
 @interface BBRedBloodCell : BBObject
 
+- (id)initOxygenated:(BOOL)oxygenated;
+
+//do not set often. it resets the texture whenever you do
+@property (nonatomic) BOOL oxygenated;
+
 + (double)power;
 
 @end
