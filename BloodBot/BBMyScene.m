@@ -41,14 +41,51 @@ static double uniform(double min, double max) {
 @interface BBMyScene () <SKPhysicsContactDelegate>
 
 @property BOOL driving;
-@property double targetAngle;
+@property CGPoint targetPoint;
 @property (strong, nonatomic) NSMutableSet *redBloodCells;//set of SKNodes
 @property (strong, nonatomic) NSMutableSet *whiteBloodCells;
 @property (strong, nonatomic) NSMutableSet *pathogens;
 
+@property (nonatomic) int pathogensKilled;
+@property (strong, nonatomic) SKSpriteNode *pathogenProportion;
+@property (strong, nonatomic) SKLabelNode *pathogenLabel;
+
+@property double playerPower;
+@property (strong, nonatomic) SKLabelNode *powerLabel;
+
 @end
 
 @implementation BBMyScene
+
+- (SKSpriteNode *)pathogenProportion {
+    if (!_pathogenProportion) {
+        _pathogenProportion=[[SKSpriteNode alloc] initWithColor:[SKColor brownColor] size:CGSizeMake(40, 5)];
+        [self addChild:_pathogenProportion];
+        _pathogenProportion.anchorPoint=CGPointMake(1, .5);
+        _pathogenProportion.position=CGPointMake(50, 10);
+    }
+    return _pathogenProportion;
+}
+
+- (SKLabelNode *)powerLabel {
+    if (!_powerLabel) {
+        _powerLabel=[[SKLabelNode alloc] initWithFontNamed:@"Chalkboard"];
+        _powerLabel.fontSize=30;
+        [self addChild:_powerLabel];
+        _powerLabel.position=CGPointMake(self.size.width-100, 40);
+    }
+    return _powerLabel;
+}
+
+- (SKLabelNode *)pathogenLabel {
+    if (!_pathogenLabel) {
+        _pathogenLabel=[[SKLabelNode alloc] initWithFontNamed:@"Chalkboard"];
+        _pathogenLabel.fontSize=30;
+        [self addChild:_pathogenLabel];
+        _pathogenLabel.position=CGPointMake(self.size.width-50, 40);
+    }
+    return _pathogenLabel;
+}
 
 - (NSMutableSet *)redBloodCells {
     if (!_redBloodCells) {
@@ -72,112 +109,150 @@ static double uniform(double min, double max) {
 }
 
 - (void)didBeginContact:(SKPhysicsContact *)contact {
-    SKNode *objTouchedByPlayer;
-    if (contact.bodyA.node==self.player) {
-        objTouchedByPlayer=contact.bodyB.node;
-    } else if (contact.bodyB.node==self.player) {
-        objTouchedByPlayer=contact.bodyA.node;
+    //check for objects touched by player
+    BBRedBloodCell *redCell = (BBRedBloodCell *)[self.player otherObjectInCollision:contact possibleObjects:self.redBloodCells];
+    if (redCell) {
+        self.playerPower+=[BBRedBloodCell power];
+        [redCell remove];
+    }
+    BBWhiteBloodCell *whiteCell = (BBWhiteBloodCell *)[self.player otherObjectInCollision:contact possibleObjects:self.whiteBloodCells];
+    if (whiteCell) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:PLAYER_DESTROYED object:nil];
+    }
+    BBPathogen *pathogen = (BBPathogen *)[self.player otherObjectInCollision:contact possibleObjects:self.pathogens];
+    if (pathogen) {
+        self.pathogensKilled++;
+        //self.pathogensLeft--;
+        [pathogen remove];
     }
     
-    if (objTouchedByPlayer) {
-        if ([self.redBloodCells containsObject:objTouchedByPlayer]) {
-            [self.redBloodCells removeObject:objTouchedByPlayer];
-            [objTouchedByPlayer removeFromParent];
-        } else if ([self.pathogens containsObject:objTouchedByPlayer]) {
-            [objTouchedByPlayer removeFromParent];
+    if (!whiteCell) {//white cell didn't touch player. check if it touched pathogen
+        for (BBWhiteBloodCell *white in self.whiteBloodCells) {
+            if ([white partOfCollision:contact]) {
+                whiteCell=white;
+            }
+        }
+        pathogen = (BBPathogen *)[whiteCell otherObjectInCollision:contact possibleObjects:self.pathogens];
+        if (pathogen) {
+            self.pathogensKilled++;
+            //self.pathogensLeft--;
+            [pathogen remove];
         }
     }
     
-    SKNode *objTouchedByWBC;
-    if ([self.whiteBloodCells containsObject:contact.bodyA.node]) {
-        objTouchedByWBC=contact.bodyB.node;
-    } else if ([self.whiteBloodCells containsObject:contact.bodyB.node]) {
-        objTouchedByWBC=contact.bodyA.node;
-    }
-    if (objTouchedByWBC) {
-        if ([self.pathogens containsObject:objTouchedByWBC]) {
-            [objTouchedByWBC removeFromParent];
-        } else if (objTouchedByWBC==self.player) {
-            [self.player removeFromParent];
-        }
-    }
+    self.pathogenLabel.text=[NSString stringWithFormat:@"%d", self.pathogensKilled];
+    double proportion = 1.*self.pathogensKilled/self.pathogens.count;
+    [self setProportion:proportion];
 }
 
-- (SKSpriteNode *)player {
+- (void)setProportion:(double)proportion {
+    double angle = 2*M_PI-proportion*M_PI;
+    [self.pathogenProportion runAction:[SKAction rotateToAngle:angle duration:.1 shortestUnitArc:YES]];
+}
+
+- (void)setPathogensKilled:(int)pathogensKilled {
+    _pathogensKilled=pathogensKilled;
+    double proportion = 1.*self.pathogensKilled/self.pathogens.count;
+    [self setProportion:proportion];
+}
+
+- (CGFloat)playerX {
+    return 50;
+}
+
+- (BBRobot *)player {
     if (!_player) {
-        _player = [[SKSpriteNode alloc] initWithColor:[SKColor grayColor] size:CGSizeMake(30,10)];
-        _player.position=CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame));//or screen center or something else
-        _player.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:_player.size];
-        _player.physicsBody.dynamic=YES;
-        _player.physicsBody.contactTestBitMask=1;
-        _player.physicsBody.angularDamping=1;
+        _player = [[BBRobot alloc] init];//[[SKSpriteNode alloc] initWithColor:[SKColor grayColor] size:CGSizeMake(10,30)];
     }
     return _player;
 }
 
 - (SKSpriteNode *)plasma {
     if (!_plasma) {
-        _plasma = [[SKSpriteNode alloc] initWithColor:[SKColor yellowColor] size:CGSizeMake(self.frame.size.width*10, self.frame.size.height)];
-        _plasma.anchorPoint=CGPointMake(0, 0);
-        _plasma.position=CGPointMake(0, 0);
-        [_plasma runAction:[SKAction repeatActionForever:[SKAction moveBy:CGVectorMake(-100, 0) duration:10]]];
+        _plasma = [[SKSpriteNode alloc] initWithColor:[SKColor yellowColor] size:CGSizeMake(self.frame.size.width*5, self.frame.size.height)];
+        _plasma.anchorPoint=CGPointMake(0, .5);
+        _plasma.position=CGPointMake(CGRectGetMinX(self.frame), CGRectGetMidY(self.frame));
     }
     return _plasma;
 }
 
 - (CGPoint)randomRightPlasmaLocation {
-    return CGPointMake(self.frame.size.width-self.plasma.position.x, uniform(CGRectGetMinY(self.frame), CGRectGetMaxY(self.frame)));
+    return [self convertPoint:CGPointMake(self.size.width, uniform(15, self.size.height-15)) toNode:self.plasma];
 }
 
 - (void)addRedBloodCell {
-    SKSpriteNode *red = [[SKSpriteNode alloc] initWithColor:[UIColor redColor] size:CGSizeMake(10, 10)];
+    BBRedBloodCell *red = [[BBRedBloodCell alloc] init];
     red.position=[self randomRightPlasmaLocation];
-    red.physicsBody=[SKPhysicsBody bodyWithRectangleOfSize:red.size];
-    red.physicsBody.restitution=1;
-    red.physicsBody.linearDamping=.3;//go with the flow
     //get it going.
     //change momentum. starting momentum is 0. calculate ending momentum
     //vx is between -1 and -4 m/s
     //vy is between -3 and 3 m/s
     //how do meters map to pixels? I had to fudge the numbers for this one
-    
-    [self.plasma addChild:red];
+    [red addToNode:self.plasma];
     [self.redBloodCells addObject:red];
-    
-    [red.physicsBody applyImpulse:CGVectorMake(uniform(-10, -30)*red.physicsBody.mass, uniform(-30, 30)*red.physicsBody.mass)];
+    red.velocity = CGVectorMake(uniform(-10, -30), uniform(-30, 30));
+    red.angularVelocity=uniform(-1, 1);
 }
 
 - (void)addWhiteBloodCell {
-    SKSpriteNode *white = [[SKSpriteNode alloc] initWithColor:[SKColor whiteColor] size:CGSizeMake(15, 15)];
+    BBWhiteBloodCell *white = [[BBWhiteBloodCell alloc] init];
     white.position=[self randomRightPlasmaLocation];
-    white.physicsBody=[SKPhysicsBody bodyWithRectangleOfSize:white.size];
-    white.physicsBody.restitution=0;
-    white.physicsBody.linearDamping=.2;
     
-    [self.plasma addChild:white];
+    [white addToNode:self.plasma];
     [self.whiteBloodCells addObject:white];
-    white.physicsBody.contactTestBitMask=2;
-    
-    [white.physicsBody applyImpulse:CGVectorMake(uniform(-50, -80)*white.physicsBody.mass, uniform(-50, 50)*white.physicsBody.mass)];
+
+    white.velocity=CGVectorMake(uniform(-50, -80), uniform(-50, 50));
+    white.angularVelocity=uniform(-1, 1);
 }
 
 - (void)addPathogen {
-    SKSpriteNode *pathogen = [[SKSpriteNode alloc] initWithColor:[SKColor orangeColor] size:CGSizeMake(12,12)];
+    BBPathogen *pathogen = [[BBPathogen alloc] init];
     pathogen.position=[self randomRightPlasmaLocation];
-    pathogen.physicsBody=[SKPhysicsBody bodyWithRectangleOfSize:pathogen.size];
-    pathogen.physicsBody.restitution=0;
-    pathogen.physicsBody.linearDamping=.05;
     
-    [self.plasma addChild:pathogen];
+    [pathogen addToNode:self.plasma];
     [self.pathogens addObject:pathogen];
+    double proportion = 1.*self.pathogensKilled/self.pathogens.count;
+    [self setProportion:proportion];
     
-    [pathogen.physicsBody applyImpulse:CGVectorMake(uniform(-60, -100)*pathogen.physicsBody.mass, uniform(-40, 40)*pathogen.physicsBody.mass)];
+    pathogen.velocity=CGVectorMake(uniform(-60, -100), uniform(-40, 40));
+    pathogen.angularVelocity=uniform(-1, 1);
+}
+
+#define MAX_PATHOGENS 50
+//don't keep running after you've dealt with all of the pathogens you will create, but don't create extras
+
+#define WAIT_BETWEEN_ADDING .5
+//average frequency of adding
+- (double)redCellFrequency {
+    return UIUserInterfaceIdiomPad==UI_USER_INTERFACE_IDIOM()? 4: 2;
+}
+- (double)whiteCellFrequency {
+    return UIUserInterfaceIdiomPad==UI_USER_INTERFACE_IDIOM()? .7: .3;
+}
+- (double)pathogenFrequency {
+    return UIUserInterfaceIdiomPad==UI_USER_INTERFACE_IDIOM()?1:.5;
 }
 
 - (void)createObjects {
-    [self addRedBloodCell];
-    if (rand()%4==0)[self addWhiteBloodCell];
-    if (rand()%5==0) {
+    //probability of adding red blood cell = WAIT_BETWEEN_ADDING * BLOOD_CELLS_PER_SECOND
+    double redCells = WAIT_BETWEEN_ADDING * [self redCellFrequency];
+    while (redCells>1) {
+        [self addRedBloodCell];
+        redCells--;
+    }
+    double whiteCells = WAIT_BETWEEN_ADDING * [self whiteCellFrequency];
+    while (whiteCells > 1) {
+        [self addWhiteBloodCell];
+        whiteCells--;
+    }
+    double pathogens = WAIT_BETWEEN_ADDING * [self pathogenFrequency];
+    while (pathogens > 1 && self.pathogens.count<MAX_PATHOGENS) {
+        pathogens--;
+        [self addPathogen];
+    }
+    if (uniform(0, 1)<redCells)[self addRedBloodCell];
+    if (uniform(0, 1)<whiteCells)[self addWhiteBloodCell];
+    if (uniform(0, 1)<pathogens && self.pathogens.count<MAX_PATHOGENS) {
         [self addPathogen];
     }
 }
@@ -187,31 +262,24 @@ static double uniform(double min, double max) {
         /* Setup your scene here */
         
         self.backgroundColor = [SKColor blackColor];
-        /*
-        SKLabelNode *myLabel = [SKLabelNode labelNodeWithFontNamed:@"Chalkduster"];
         
-        myLabel.text = @"Hello, World!";
-        myLabel.fontSize = 30;
-        myLabel.position = CGPointMake(CGRectGetMidX(self.frame),
-                                       CGRectGetMidY(self.frame));
+        self.playerPower=[BBRedBloodCell power]*10;
         
-        [self addChild:myLabel];
-        */
         [self addChild:self.plasma];
-        [self.plasma addChild:self.player];
+        [self.player addToNode:self.plasma];
         
+        self.player.position=[self convertPoint:CGPointMake([self playerX], self.size.height/2) toNode:self.plasma];
         
         //create bottom wall
-        SKSpriteNode *bottomWall = [[SKSpriteNode alloc] initWithColor:[SKColor redColor] size:CGSizeMake(size.width, 10)];
-        bottomWall.position = CGPointMake(CGRectGetMidX(self.frame),
-                                          CGRectGetMidY(self.frame)-110);//CGPointMake(size.width/2, size.height-30);
+        SKSpriteNode *bottomWall = [[SKSpriteNode alloc] initWithColor:[SKColor redColor] size:CGSizeMake(size.width*100, 10)];
+        bottomWall.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMinY(self.plasma.frame));
         bottomWall.physicsBody=[SKPhysicsBody bodyWithRectangleOfSize:bottomWall.size];
         bottomWall.physicsBody.dynamic=NO;
         [self addChild:bottomWall];
         
         //create top wall
-        SKSpriteNode *topWall = [[SKSpriteNode alloc] initWithColor:[SKColor redColor] size:CGSizeMake(size.width, 10)];
-        topWall.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMidY(self.frame)+110);
+        SKSpriteNode *topWall = [[SKSpriteNode alloc] initWithColor:[SKColor redColor] size:CGSizeMake(size.width*100, 10)];
+        topWall.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMaxY(self.plasma.frame));
         topWall.physicsBody=[SKPhysicsBody bodyWithRectangleOfSize:topWall.size];
         topWall.physicsBody.dynamic=NO;
         [self addChild:topWall];
@@ -220,13 +288,13 @@ static double uniform(double min, double max) {
         self.physicsWorld.contactDelegate=self;
         
         //create run loop for creating new objects
-        [self runAction:[SKAction repeatActionForever:[SKAction sequence:@[[SKAction waitForDuration:.5], [SKAction performSelector:@selector(createObjects) onTarget:self]]]]];
+        [self runAction:[SKAction repeatActionForever:[SKAction sequence:@[[SKAction waitForDuration:WAIT_BETWEEN_ADDING], [SKAction performSelector:@selector(createObjects) onTarget:self]]]]];
     }
     return self;
 }
 
-- (void)pointTowardsPoint:(CGPoint)point {
-    self.targetAngle=atan2(point.y-self.player.position.y, point.x-self.player.position.x);
+- (void)viewDidAppear {
+    [_plasma runAction:[SKAction repeatActionForever:[SKAction moveBy:CGVectorMake(-2000, 0) duration:100]]];
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -234,7 +302,7 @@ static double uniform(double min, double max) {
     
     //start moving player up
     self.driving=YES;
-    [self pointTowardsPoint:[[touches anyObject] locationInNode:self.plasma]];
+    self.targetPoint =[[touches anyObject] locationInNode:self.plasma];
     
     //SKAction *moveUpAction = [SKAction moveBy:CGVectorMake(0, 1000) duration:1];
     //[self.player runAction:[SKAction repeatActionForever:moveUpAction] withKey:@"move up"];
@@ -261,34 +329,59 @@ static double uniform(double min, double max) {
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     if (self.driving) {
-        [self pointTowardsPoint:[[touches anyObject] locationInNode:self.plasma]];
+        self.targetPoint=[[touches anyObject] locationInNode:self.plasma];
     }
+}
+
+- (BOOL)loops {
+    return NO;
 }
 
 -(void)update:(CFTimeInterval)currentTime {
     /* Called before each frame is rendered */
-    if (self.driving) {
-        /*double angleChangeRequired = self.targetAngle - self.player.zRotation;
-        if (self.player.zRotation<self.targetAngle) {
-            [self.player.physicsBody applyAngularImpulse:angleChangeRequired/10000];
-        } else {
-            [self.player.physicsBody applyAngularImpulse:angleChangeRequired/10000];
-        }*/
-        CGFloat forceAngle = self.targetAngle;
-        CGFloat forceMagnitude = 60*self.player.physicsBody.mass;
-        CGPoint forcePoint = [self convertPoint:self.player.position fromNode:self.plasma];
-        forcePoint.x+=15*cos(self.player.zRotation);
-        forcePoint.y+=15*sin(self.player.zRotation);
-        [self.player.physicsBody applyForce:CGVectorMake(forceMagnitude*cos(forceAngle), forceMagnitude*sin(forceAngle)) atPoint:forcePoint];
+    static CFTimeInterval previousTime = 0;
+    if (!previousTime) previousTime=currentTime;
+    //CFTimeInterval timestep = currentTime-previousTime;
+    
+    if (self.driving && self.playerPower>0) {
+        CGFloat forceAngle = atan2(self.targetPoint.y-self.player.position.y, self.targetPoint.x-self.player.position.x);
+        CGFloat acceleration = sqrtf(pow(self.player.position.y-self.targetPoint.y, 2)+pow(self.player.position.x-self.targetPoint.x, 2))/2;
+        
+        [self.player applyAcceleration:CGVectorMake(acceleration*cos(forceAngle), acceleration*sin(forceAngle))];
+        self.playerPower-=acceleration;
+        //NSLog(@"player power:%g", self.playerPower);
+    }
+    static int prevPower = 0;
+    int newPower = self.playerPower/[BBRedBloodCell power];
+    if (prevPower!=newPower) {
+        prevPower=newPower;
+        self.powerLabel.text=[NSString stringWithFormat:@"%d", newPower];
+    }
+    
+    //scene coordinates
+    int MIN_PLASMA_X = -20;
+    int MAX_PLASMA_X = self.size.width+20;
+    
+    if ([self convertPoint:self.player.position fromNode:self.plasma].x<MIN_PLASMA_X) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:PLAYER_DESTROYED object:nil];
+        [self.player remove];
     }
     
     //remove off-screen objects
     NSArray *inPlasma = [self.plasma.children copy];
     for (SKNode *node in inPlasma) {
-        if (node.position.x+self.plasma.position.x<-10) {
-            [node removeFromParent];
+        CGPoint point =[self convertPoint:node.position fromNode:self.plasma];
+        if (point.x<MIN_PLASMA_X) {
+            if ([self loops]) {
+                node.position=[self convertPoint:CGPointMake(MAX_PLASMA_X, point.y) toNode:self.plasma];
+            } else {
+                [node removeFromParent];
+            }
+            
         }
     }
+    
+    previousTime=currentTime;
 }
 
 @end

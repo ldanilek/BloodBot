@@ -9,25 +9,49 @@
 #import "BBViewController.h"
 #import "BBMyScene.h"
 
+@interface BBViewController ()
+
+@property BOOL opened;
+@property BBMyScene *scene;
+
+@end
+
 @implementation BBViewController
+
+- (void)playerGone {
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerGone) name:PLAYER_DESTROYED object:self.scene];
+    
+}
 
-    // Configure the view.
-    SKView * skView = (SKView *)self.view;
-    
-    //I think these are for debugging
-    skView.showsFPS = YES;
-    skView.showsNodeCount = YES;
-    
-    // Create and configure the scene.
-    SKScene * scene = [BBMyScene sceneWithSize:skView.bounds.size];
-    scene.scaleMode = SKSceneScaleModeAspectFill;
-    
-    // Present the scene.
-    [skView presentScene:scene];
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.scene viewDidAppear];
+}
+
+- (void)viewDidLayoutSubviews {
+    if (!self.opened) {
+        // Configure the view.
+        SKView * skView = (SKView *)self.view;
+        
+        //I think these are for debugging
+        skView.showsFPS = YES;
+        skView.showsNodeCount = YES;
+        
+        // Create and configure the scene.
+        self.scene = [BBMyScene sceneWithSize:skView.bounds.size];
+        self.scene.scaleMode = SKSceneScaleModeAspectFill;
+        
+        // Present the scene.
+        [skView presentScene:self.scene];
+    }
+    self.opened=YES;
 }
 
 - (BOOL)shouldAutorotate

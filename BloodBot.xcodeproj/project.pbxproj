@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9BA2D55918C8FAE10000627D /* red-circle-hi.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BA2D55818C8FAE10000627D /* red-circle-hi.png */; };
+		9BA2D55B18C92F560000627D /* capsule.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BA2D55A18C92F560000627D /* capsule.png */; };
+		9BA2D55E18CA51310000627D /* BBMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA2D55D18CA51310000627D /* BBMenuViewController.m */; };
+		9BA2D56118CA905F0000627D /* BBObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA2D56018CA905F0000627D /* BBObject.m */; };
+		9BA2D56418CA967C0000627D /* BBRobot.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA2D56318CA967C0000627D /* BBRobot.m */; };
+		9BA2D56718CA96960000627D /* BBWhiteBloodCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA2D56618CA96960000627D /* BBWhiteBloodCell.m */; };
+		9BA2D56A18CA9F250000627D /* BBRedBloodCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA2D56918CA9F250000627D /* BBRedBloodCell.m */; };
+		9BA2D56D18CAA0B70000627D /* BBPathogen.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA2D56C18CAA0B70000627D /* BBPathogen.m */; };
+		9BA2D56F18CAA8A50000627D /* th.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BA2D56E18CAA8A50000627D /* th.png */; };
+		9BA2D57118CAAA750000627D /* diamond.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BA2D57018CAAA750000627D /* diamond.png */; };
 		9BED8B5A18C7BD9A004EFAEC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BED8B5918C7BD9A004EFAEC /* Foundation.framework */; };
 		9BED8B5C18C7BD9A004EFAEC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BED8B5B18C7BD9A004EFAEC /* CoreGraphics.framework */; };
 		9BED8B5E18C7BD9A004EFAEC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BED8B5D18C7BD9A004EFAEC /* UIKit.framework */; };
@@ -25,6 +35,7 @@
 		9BED8B8518C7BD9B004EFAEC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BED8B5D18C7BD9A004EFAEC /* UIKit.framework */; };
 		9BED8B8D18C7BD9B004EFAEC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9BED8B8B18C7BD9B004EFAEC /* InfoPlist.strings */; };
 		9BED8B8F18C7BD9B004EFAEC /* BloodBotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BED8B8E18C7BD9B004EFAEC /* BloodBotTests.m */; };
+		9BEDD3EE18C8479E002CED3A /* shuttle2.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BEDD3ED18C8479E002CED3A /* shuttle2.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +49,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9BA2D55818C8FAE10000627D /* red-circle-hi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-circle-hi.png"; sourceTree = "<group>"; };
+		9BA2D55A18C92F560000627D /* capsule.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = capsule.png; sourceTree = "<group>"; };
+		9BA2D55C18CA51310000627D /* BBMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBMenuViewController.h; sourceTree = "<group>"; };
+		9BA2D55D18CA51310000627D /* BBMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBMenuViewController.m; sourceTree = "<group>"; };
+		9BA2D55F18CA905F0000627D /* BBObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBObject.h; sourceTree = "<group>"; };
+		9BA2D56018CA905F0000627D /* BBObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBObject.m; sourceTree = "<group>"; };
+		9BA2D56218CA967C0000627D /* BBRobot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBRobot.h; sourceTree = "<group>"; };
+		9BA2D56318CA967C0000627D /* BBRobot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBRobot.m; sourceTree = "<group>"; };
+		9BA2D56518CA96960000627D /* BBWhiteBloodCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBWhiteBloodCell.h; sourceTree = "<group>"; };
+		9BA2D56618CA96960000627D /* BBWhiteBloodCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBWhiteBloodCell.m; sourceTree = "<group>"; };
+		9BA2D56818CA9F250000627D /* BBRedBloodCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBRedBloodCell.h; sourceTree = "<group>"; };
+		9BA2D56918CA9F250000627D /* BBRedBloodCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBRedBloodCell.m; sourceTree = "<group>"; };
+		9BA2D56B18CAA0B70000627D /* BBPathogen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBPathogen.h; sourceTree = "<group>"; };
+		9BA2D56C18CAA0B70000627D /* BBPathogen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBPathogen.m; sourceTree = "<group>"; };
+		9BA2D56E18CAA8A50000627D /* th.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = th.png; sourceTree = "<group>"; };
+		9BA2D57018CAAA750000627D /* diamond.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = diamond.png; sourceTree = "<group>"; };
 		9BED8B5618C7BD9A004EFAEC /* BloodBot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BloodBot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BED8B5918C7BD9A004EFAEC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9BED8B5B18C7BD9A004EFAEC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -62,6 +89,7 @@
 		9BED8B8A18C7BD9B004EFAEC /* BloodBotTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BloodBotTests-Info.plist"; sourceTree = "<group>"; };
 		9BED8B8C18C7BD9B004EFAEC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9BED8B8E18C7BD9B004EFAEC /* BloodBotTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BloodBotTests.m; sourceTree = "<group>"; };
+		9BEDD3ED18C8479E002CED3A /* shuttle2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shuttle2.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,12 +155,19 @@
 				9BED8B6B18C7BD9A004EFAEC /* BBAppDelegate.m */,
 				9BED8B6D18C7BD9A004EFAEC /* Main_iPhone.storyboard */,
 				9BED8B7018C7BD9A004EFAEC /* Main_iPad.storyboard */,
+				9BA2D55C18CA51310000627D /* BBMenuViewController.h */,
+				9BA2D55D18CA51310000627D /* BBMenuViewController.m */,
 				9BED8B7318C7BD9A004EFAEC /* BBViewController.h */,
 				9BED8B7418C7BD9A004EFAEC /* BBViewController.m */,
 				9BED8B7618C7BD9A004EFAEC /* BBMyScene.h */,
 				9BED8B7718C7BD9A004EFAEC /* BBMyScene.m */,
 				9BED8B9818C7C97F004EFAEC /* Model */,
 				9BED8B7918C7BD9A004EFAEC /* Spaceship.png */,
+				9BEDD3ED18C8479E002CED3A /* shuttle2.png */,
+				9BA2D57018CAAA750000627D /* diamond.png */,
+				9BA2D55A18C92F560000627D /* capsule.png */,
+				9BA2D55818C8FAE10000627D /* red-circle-hi.png */,
+				9BA2D56E18CAA8A50000627D /* th.png */,
 				9BED8B7B18C7BD9A004EFAEC /* Images.xcassets */,
 				9BED8B6218C7BD9A004EFAEC /* Supporting Files */,
 			);
@@ -171,6 +206,16 @@
 		9BED8B9818C7C97F004EFAEC /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				9BA2D55F18CA905F0000627D /* BBObject.h */,
+				9BA2D56018CA905F0000627D /* BBObject.m */,
+				9BA2D56218CA967C0000627D /* BBRobot.h */,
+				9BA2D56318CA967C0000627D /* BBRobot.m */,
+				9BA2D56518CA96960000627D /* BBWhiteBloodCell.h */,
+				9BA2D56618CA96960000627D /* BBWhiteBloodCell.m */,
+				9BA2D56818CA9F250000627D /* BBRedBloodCell.h */,
+				9BA2D56918CA9F250000627D /* BBRedBloodCell.m */,
+				9BA2D56B18CAA0B70000627D /* BBPathogen.h */,
+				9BA2D56C18CAA0B70000627D /* BBPathogen.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -253,8 +298,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BED8B7A18C7BD9A004EFAEC /* Spaceship.png in Resources */,
+				9BA2D56F18CAA8A50000627D /* th.png in Resources */,
 				9BED8B7C18C7BD9A004EFAEC /* Images.xcassets in Resources */,
+				9BEDD3EE18C8479E002CED3A /* shuttle2.png in Resources */,
+				9BA2D55B18C92F560000627D /* capsule.png in Resources */,
 				9BED8B7218C7BD9A004EFAEC /* Main_iPad.storyboard in Resources */,
+				9BA2D57118CAAA750000627D /* diamond.png in Resources */,
+				9BA2D55918C8FAE10000627D /* red-circle-hi.png in Resources */,
 				9BED8B6F18C7BD9A004EFAEC /* Main_iPhone.storyboard in Resources */,
 				9BED8B6618C7BD9A004EFAEC /* InfoPlist.strings in Resources */,
 			);
@@ -277,6 +327,12 @@
 			files = (
 				9BED8B7518C7BD9A004EFAEC /* BBViewController.m in Sources */,
 				9BED8B6C18C7BD9A004EFAEC /* BBAppDelegate.m in Sources */,
+				9BA2D56718CA96960000627D /* BBWhiteBloodCell.m in Sources */,
+				9BA2D56418CA967C0000627D /* BBRobot.m in Sources */,
+				9BA2D56118CA905F0000627D /* BBObject.m in Sources */,
+				9BA2D56D18CAA0B70000627D /* BBPathogen.m in Sources */,
+				9BA2D55E18CA51310000627D /* BBMenuViewController.m in Sources */,
+				9BA2D56A18CA9F250000627D /* BBRedBloodCell.m in Sources */,
 				9BED8B7818C7BD9A004EFAEC /* BBMyScene.m in Sources */,
 				9BED8B6818C7BD9A004EFAEC /* main.m in Sources */,
 			);
@@ -499,6 +555,7 @@
 				9BED8B9418C7BD9B004EFAEC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9BED8B9518C7BD9B004EFAEC /* Build configuration list for PBXNativeTarget "BloodBotTests" */ = {
 			isa = XCConfigurationList;
@@ -507,6 +564,7 @@
 				9BED8B9718C7BD9B004EFAEC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
