@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B79D47718D008C300A1FC7C /* BBButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B79D47618D008C300A1FC7C /* BBButtonView.m */; };
 		9BA2D55918C8FAE10000627D /* red-circle-hi.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BA2D55818C8FAE10000627D /* red-circle-hi.png */; };
 		9BA2D55B18C92F560000627D /* capsule.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BA2D55A18C92F560000627D /* capsule.png */; };
 		9BA2D55E18CA51310000627D /* BBMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA2D55D18CA51310000627D /* BBMenuViewController.m */; };
@@ -51,6 +52,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9B79D47518D008C300A1FC7C /* BBButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBButtonView.h; sourceTree = "<group>"; };
+		9B79D47618D008C300A1FC7C /* BBButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBButtonView.m; sourceTree = "<group>"; };
 		9BA2D55818C8FAE10000627D /* red-circle-hi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-circle-hi.png"; sourceTree = "<group>"; };
 		9BA2D55A18C92F560000627D /* capsule.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = capsule.png; sourceTree = "<group>"; };
 		9BA2D55C18CA51310000627D /* BBMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBMenuViewController.h; sourceTree = "<group>"; };
@@ -163,6 +166,8 @@
 				9BA2D55D18CA51310000627D /* BBMenuViewController.m */,
 				9BED8B7318C7BD9A004EFAEC /* BBViewController.h */,
 				9BED8B7418C7BD9A004EFAEC /* BBViewController.m */,
+				9B79D47518D008C300A1FC7C /* BBButtonView.h */,
+				9B79D47618D008C300A1FC7C /* BBButtonView.m */,
 				9BED8B7618C7BD9A004EFAEC /* BBMyScene.h */,
 				9BED8B7718C7BD9A004EFAEC /* BBMyScene.m */,
 				9BED8B9818C7C97F004EFAEC /* Model */,
@@ -336,6 +341,7 @@
 				9BED8B7518C7BD9A004EFAEC /* BBViewController.m in Sources */,
 				9BED8B6C18C7BD9A004EFAEC /* BBAppDelegate.m in Sources */,
 				9BA2D56718CA96960000627D /* BBWhiteBloodCell.m in Sources */,
+				9B79D47718D008C300A1FC7C /* BBButtonView.m in Sources */,
 				9BA2D56418CA967C0000627D /* BBRobot.m in Sources */,
 				9BA2D56118CA905F0000627D /* BBObject.m in Sources */,
 				9BA2D56D18CAA0B70000627D /* BBPathogen.m in Sources */,

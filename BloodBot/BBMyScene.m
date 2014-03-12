@@ -143,8 +143,22 @@ static double uniform(double min, double max) {
     [self setPathogenGraphics];
 }
 
+#define DISTANCE_FACTOR 0.003
+- (int)pointsDueToDistance {
+    return -self.plasma.position.x*DISTANCE_FACTOR;
+}
+
+- (int)score {
+    return self.pathogensKilled-self.pathogensMissed+[self pointsDueToDistance];
+}
+
 - (void)setPathogenGraphics {
-    self.pathogenLabel.text=[NSString stringWithFormat:@"Score: %d", self.pathogensKilled-self.pathogensMissed];
+    static int prevScore = -1;
+    int currentScore = self.score;
+    if (prevScore!=currentScore) {
+        self.pathogenLabel.text=[NSString stringWithFormat:@"Score: %d", currentScore];
+        prevScore=currentScore;
+    }
 }
 
 #define PLASMA_MOVE_KEY @"MOVE"
