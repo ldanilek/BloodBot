@@ -184,7 +184,7 @@ static double uniform(double min, double max) {
 
 - (BBRobot *)player {
     if (!_player) {
-        _player = [[BBRobot alloc] init];//[[SKSpriteNode alloc] initWithColor:[SKColor grayColor] size:CGSizeMake(10,30)];
+        _player = [[BBRobot alloc] init];
         _player.delegate=self;
     }
     return _player;
@@ -192,7 +192,7 @@ static double uniform(double min, double max) {
 
 - (SKSpriteNode *)plasma {
     if (!_plasma) {
-        _plasma = [[SKSpriteNode alloc] initWithColor:[SKColor brownColor] size:CGSizeMake(self.frame.size.width*100, self.frame.size.height)];
+        _plasma = [[SKSpriteNode alloc] initWithColor:[SKColor colorWithRed:.5 green:0 blue:0 alpha:1] size:CGSizeMake(self.frame.size.width*100, self.frame.size.height)];
         _plasma.anchorPoint=CGPointMake(0, .5);
         _plasma.position=CGPointMake(CGRectGetMinX(self.frame), CGRectGetMidY(self.frame));
     }
@@ -204,9 +204,10 @@ static double uniform(double min, double max) {
 }
 
 #define VEIN_OXYGENATED .6
+#define ARTERY_OXYGENATED .9
 
 - (void)addRedBloodCell {
-    BOOL oxygenated = YES;
+    BOOL oxygenated = uniform(0, 1)<ARTERY_OXYGENATED;
     if (self.levelType==BBLevelVein) {
         oxygenated=uniform(0, 1)<VEIN_OXYGENATED;
     }
@@ -237,7 +238,7 @@ static double uniform(double min, double max) {
 }
 
 - (void)addPathogen {
-    BBPathogen *pathogen = [[BBPathogen alloc] init];
+    BBPathogen *pathogen = [[BBPathogen alloc] initWithType:BBPathogenHIV];
     pathogen.delegate=self;
     pathogen.position=[self randomRightPlasmaLocation];
     

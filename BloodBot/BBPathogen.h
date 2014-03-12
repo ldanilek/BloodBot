@@ -8,8 +8,19 @@
 
 #import "BBObject.h"
 
+typedef enum {
+    BBPathogenBacteria,
+    BBPathogenHIV,
+} BBPathogenType;
+
 @interface BBPathogen : BBObject
 
 - (BOOL)nodeIs:(SKNode *)node;
+
+//don't change after initialization
+@property (nonatomic) BBPathogenType pathogenType;
+
+//designated Initializer. call init to make a bacterium
+- initWithType:(BBPathogenType)pathogenType;
 
 @end

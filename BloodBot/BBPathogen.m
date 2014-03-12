@@ -17,6 +17,22 @@
 
 @implementation BBPathogen
 
+- (instancetype)initWithType:(BBPathogenType)pathogenType {
+    if (self=[super init]) {
+        self.pathogenType=pathogenType;
+        self.node.physicsBody.restitution=0;
+        self.node.physicsBody.linearDamping=.05;
+    }
+    return self;
+}
+
+- (id)init {
+    if (self=[self initWithType:BBPathogenBacteria]) {
+        
+    }
+    return self;
+}
+
 - (BOOL)nodeIs:(SKNode *)node {
     return node==self.node;
 }
@@ -24,25 +40,31 @@
 @dynamic node;
 
 - (NSString *)imageName {
-    return @"diamond.png";
+    if (self.pathogenType==BBPathogenHIV) return @"diamond.png";
+    else if (self.pathogenType==BBPathogenBacteria) return @"bacteria.png";
+    return nil;
 }
 
 - (CGPoint *)outline:(int *)count {
-    static CGPoint points[4];
-    points[0]=CGPointMake(15, 0);
-    points[1]=CGPointMake(0, 15);
-    points[2]=CGPointMake(-15, 0);
-    points[3]=CGPointMake(0, -15);
-    *count=4;
-    return points;
-}
-
-- (instancetype)init {
-    if (self=[super init]) {
-        self.node.physicsBody.restitution=0;
-        self.node.physicsBody.linearDamping=.05;
+    if (self.pathogenType==BBPathogenHIV) {
+        static CGPoint points[4];
+        points[0]=CGPointMake(15, 0);
+        points[1]=CGPointMake(0, 15);
+        points[2]=CGPointMake(-15, 0);
+        points[3]=CGPointMake(0, -15);
+        *count=4;
+        return points;
+    } else {
+        static CGPoint points[6];
+        points[0]=CGPointMake(-12.5, 7.5);
+        points[1]=CGPointMake(-22.5, 0);
+        points[2]=CGPointMake(-12.5, -7.5);
+        points[3]=CGPointMake(14.5, -7.5);
+        points[4]=CGPointMake(22.5, 0);
+        points[5]=CGPointMake(14.5, 7.5);
+        *count=6;
+        return points;
     }
-    return self;
 }
 
 @end

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9B79D47718D008C300A1FC7C /* BBButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B79D47618D008C300A1FC7C /* BBButtonView.m */; };
+		9B79D47918D0DC4800A1FC7C /* bacteria.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B79D47818D0DC4800A1FC7C /* bacteria.png */; };
 		9BA2D55918C8FAE10000627D /* red-circle-hi.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BA2D55818C8FAE10000627D /* red-circle-hi.png */; };
 		9BA2D55B18C92F560000627D /* capsule.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BA2D55A18C92F560000627D /* capsule.png */; };
 		9BA2D55E18CA51310000627D /* BBMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA2D55D18CA51310000627D /* BBMenuViewController.m */; };
@@ -54,6 +55,7 @@
 /* Begin PBXFileReference section */
 		9B79D47518D008C300A1FC7C /* BBButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBButtonView.h; sourceTree = "<group>"; };
 		9B79D47618D008C300A1FC7C /* BBButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBButtonView.m; sourceTree = "<group>"; };
+		9B79D47818D0DC4800A1FC7C /* bacteria.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bacteria.png; sourceTree = "<group>"; };
 		9BA2D55818C8FAE10000627D /* red-circle-hi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-circle-hi.png"; sourceTree = "<group>"; };
 		9BA2D55A18C92F560000627D /* capsule.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = capsule.png; sourceTree = "<group>"; };
 		9BA2D55C18CA51310000627D /* BBMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBMenuViewController.h; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 				9BA2D56E18CAA8A50000627D /* th.png */,
 				9BA735A318CEAE43004C1EED /* WBC.png */,
 				9BA5263618CF814500CED268 /* Blue.png */,
+				9B79D47818D0DC4800A1FC7C /* bacteria.png */,
 				9BED8B7B18C7BD9A004EFAEC /* Images.xcassets */,
 				9BED8B6218C7BD9A004EFAEC /* Supporting Files */,
 			);
@@ -311,6 +314,7 @@
 				9BED8B7A18C7BD9A004EFAEC /* Spaceship.png in Resources */,
 				9BA2D56F18CAA8A50000627D /* th.png in Resources */,
 				9BED8B7C18C7BD9A004EFAEC /* Images.xcassets in Resources */,
+				9B79D47918D0DC4800A1FC7C /* bacteria.png in Resources */,
 				9BA5263718CF814500CED268 /* Blue.png in Resources */,
 				9BEDD3EE18C8479E002CED3A /* shuttle2.png in Resources */,
 				9BA2D55B18C92F560000627D /* capsule.png in Resources */,

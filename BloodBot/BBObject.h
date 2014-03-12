@@ -29,6 +29,7 @@ typedef enum {
 @property id <BBObjectDelegate> delegate;
 
 //designated initializer is init
+//init does not create node or physics body, but they are lazily instantiated.
 
 - (void)addToNode:(SKNode *)node;
 - (void)remove;
