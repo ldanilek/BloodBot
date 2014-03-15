@@ -13,9 +13,11 @@ typedef enum {
     BBPathogenHIV,
 } BBPathogenType;
 
-@interface BBPathogen : BBObject
+static BBPathogenType pathogenForLevel(BBLevelType levelType) {
+    return (levelType==BBLevelArteryBacteria||levelType==BBLevelVeinBacteria||levelType==BBLevelVeinBacteriaSickle) ? BBPathogenBacteria : BBPathogenHIV;
+}
 
-- (BOOL)nodeIs:(SKNode *)node;
+@interface BBPathogen : BBObject
 
 //don't change after initialization
 @property (nonatomic) BBPathogenType pathogenType;

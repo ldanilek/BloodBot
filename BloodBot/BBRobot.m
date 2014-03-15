@@ -40,7 +40,7 @@
     if (self=[super init]) {
         self.node.physicsBody.contactTestBitMask=1;
         self.node.physicsBody.angularDamping=8;//technically this should be between 0 and 1. higher is better, though
-        if ([self.delegate levelType]==BBLevelArtery) {
+        if (isArtery([self.delegate levelType])) {
             self.node.physicsBody.linearDamping=1;
         }
         self.node.anchorPoint=CGPointMake(0.5, .5);
@@ -58,7 +58,8 @@
     fixedPoint.x+=relativeLocationOfFixedPoint.dx;
     fixedPoint.y+=relativeLocationOfFixedPoint.dy;
     //acceleration must be constant. do not maintain force with mass increase
-    [self.node.physicsBody applyForce:CGVectorMake(acceleration.dx*self.node.physicsBody.mass, acceleration.dy*self.node.physicsBody.mass) atPoint:accelerationPoint];
+    CGVector force = CGVectorMake(acceleration.dx*self.node.physicsBody.mass, acceleration.dy*self.node.physicsBody.mass);
+    [self.node.physicsBody applyForce:force atPoint:accelerationPoint];
     ////relative velocity of fixedPoint should be 0
     //CGVector relativeVelocity = CGVectorMake(fixedPoint.x, fixedPoint.y);
 }

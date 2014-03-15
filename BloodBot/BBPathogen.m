@@ -22,6 +22,7 @@
         self.pathogenType=pathogenType;
         self.node.physicsBody.restitution=0;
         self.node.physicsBody.linearDamping=.05;
+        self.node.physicsBody.contactTestBitMask=3;
     }
     return self;
 }
@@ -31,10 +32,6 @@
         
     }
     return self;
-}
-
-- (BOOL)nodeIs:(SKNode *)node {
-    return node==self.node;
 }
 
 @dynamic node;

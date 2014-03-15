@@ -8,13 +8,18 @@
 
 #import "BBObject.h"
 
+static BOOL isSickle(BBLevelType levelType) {
+    return levelType==BBLevelVeinBacteriaSickle||levelType==BBLevelVeinHIVSickle;
+}
+
 @interface BBRedBloodCell : BBObject
 
-- (id)initOxygenated:(BOOL)oxygenated;//designated initializer
+- (id)initOxygenated:(BOOL)oxygenated sickle:(BOOL)sickled;//designated initializer
 
 //do not set often. it resets the texture whenever you do
 @property (nonatomic) BOOL oxygenated;
+@property (nonatomic) BOOL sickled;
 
-+ (double)power;
++ (double)powerForLevelType:(BBLevelType)levelType;
 
 @end

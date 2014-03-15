@@ -40,8 +40,7 @@ static double uniform(double min, double max) {
 
 @interface BBMyScene () <SKPhysicsContactDelegate>
 
-@property BOOL driving;
-@property CGPoint targetPoint;
+@property CGPoint targetOnScreen;//in scene coordinates
 @property (strong, nonatomic) NSMutableSet *redBloodCells;//set of SKNodes
 @property (strong, nonatomic) NSMutableSet *whiteBloodCells;
 @property (strong, nonatomic) NSMutableSet *pathogens;
@@ -53,6 +52,8 @@ static double uniform(double min, double max) {
 
 @property double playerPower;
 @property (strong, nonatomic) SKLabelNode *powerLabel;
+
+@property int touches;
 
 @end
 
@@ -100,24 +101,23 @@ static double uniform(double min, double max) {
 }
 
 - (void)didBeginContact:(SKPhysicsContact *)contact {
+    
     //check for objects touched by player
     BBRedBloodCell *redCell = (BBRedBloodCell *)[self.player otherObjectInCollision:contact possibleObjects:self.redBloodCells];
     if (redCell && redCell.oxygenated) {
-        self.playerPower+=[BBRedBloodCell power];
+        self.playerPower+=[BBRedBloodCell powerForLevelType:self.levelType];
         redCell.oxygenated=NO;
-        /*CGPoint cellPosition = redCell.position;
-        
-        //[self.player absorbObject:redCell];
-        [redCell remove];
-        BBRedBloodCell *deoxygenated = [[BBRedBloodCell alloc] init];
-        [self.redBloodCells addObject:deoxygenated];
-        deoxygenated.delegate=self;
-        [deoxygenated addToNode:self.plasma];
-        deoxygenated.position=cellPosition;*/
     }
     BBWhiteBloodCell *whiteCell = (BBWhiteBloodCell *)[self.player otherObjectInCollision:contact possibleObjects:self.whiteBloodCells];
     if (whiteCell) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:PLAYER_DESTROYED object:nil];
+        if ([whiteCell infectedHIV]) {
+            self.pathogensKilled+=[whiteCell score];
+            [self.player absorbObject:whiteCell];
+            [whiteCell remove];
+            [self.whiteBloodCells removeObject:whiteCell];
+        } else {
+            [[NSNotificationCenter defaultCenter] postNotificationName:PLAYER_DESTROYED object:nil];
+        }
     }
     BBPathogen *pathogen = (BBPathogen *)[self.player otherObjectInCollision:contact possibleObjects:self.pathogens];
     if (pathogen) {
@@ -125,6 +125,7 @@ static double uniform(double min, double max) {
         [self.player absorbObject:pathogen];
         [pathogen remove];
     }
+    
     
     if (!whiteCell) {//white cell didn't touch player. check if it touched pathogen
         for (BBWhiteBloodCell *white in self.whiteBloodCells) {
@@ -134,16 +135,27 @@ static double uniform(double min, double max) {
         }
         pathogen = (BBPathogen *)[whiteCell otherObjectInCollision:contact possibleObjects:self.pathogens];
         if (pathogen) {
-            self.pathogensKilled++;
-            [whiteCell absorbObject:pathogen];
-            [pathogen remove];
+            if (pathogen.pathogenType==BBPathogenBacteria) {
+                self.pathogensKilled++;
+                [whiteCell absorbObject:pathogen];
+                [pathogen remove];
+            } else if (pathogen.pathogenType==BBPathogenHIV) {
+                [whiteCell infectWithHIV];
+            }
+        }
+    }
+    
+    if (!pathogen) {//player and white cell didn't kill pathogen. check if pathogen should absorb O2
+        for (BBPathogen *pathogen in self.pathogens) {
+            BBRedBloodCell *red = (BBRedBloodCell *)[pathogen otherObjectInCollision:contact possibleObjects:self.redBloodCells];
+            red.oxygenated=NO;
         }
     }
     
     [self setPathogenGraphics];
 }
 
-#define DISTANCE_FACTOR 0.003
+#define DISTANCE_FACTOR 0.01
 - (int)pointsDueToDistance {
     return -self.plasma.position.x*DISTANCE_FACTOR;
 }
@@ -208,10 +220,10 @@ static double uniform(double min, double max) {
 
 - (void)addRedBloodCell {
     BOOL oxygenated = uniform(0, 1)<ARTERY_OXYGENATED;
-    if (self.levelType==BBLevelVein) {
+    if (!isArtery(self.levelType)) {
         oxygenated=uniform(0, 1)<VEIN_OXYGENATED;
     }
-    BBRedBloodCell *red = [[BBRedBloodCell alloc] initOxygenated:oxygenated];
+    BBRedBloodCell *red = [[BBRedBloodCell alloc] initOxygenated:oxygenated sickle:isSickle(self.levelType)];
     red.delegate=self;
     red.position=[self randomRightPlasmaLocation];
     //get it going.
@@ -238,7 +250,7 @@ static double uniform(double min, double max) {
 }
 
 - (void)addPathogen {
-    BBPathogen *pathogen = [[BBPathogen alloc] initWithType:BBPathogenHIV];
+    BBPathogen *pathogen = [[BBPathogen alloc] initWithType:pathogenForLevel(self.levelType)];
     pathogen.delegate=self;
     pathogen.position=[self randomRightPlasmaLocation];
     
@@ -253,17 +265,47 @@ static double uniform(double min, double max) {
 #define WAIT_BETWEEN_ADDING .2
 //average frequency of adding
 - (double)redCellFrequency {
-    double freq = UIUserInterfaceIdiomPad==UI_USER_INTERFACE_IDIOM()? 4: 2;
-    if (self.levelType==BBLevelArtery) {
-        freq*=8;
+    double freq = UIUserInterfaceIdiomPad==UI_USER_INTERFACE_IDIOM()? 5: 2;
+    if (isArtery(self.levelType)) {
+        freq*=5;
     }
+    
     return freq;
 }
 - (double)whiteCellFrequency {
-    return UIUserInterfaceIdiomPad==UI_USER_INTERFACE_IDIOM()? .7: .3;
+    return UIUserInterfaceIdiomPad==UI_USER_INTERFACE_IDIOM()? .5: .3;
 }
 - (double)pathogenFrequency {
-    return UIUserInterfaceIdiomPad==UI_USER_INTERFACE_IDIOM()?1:.5;
+    double freq = UIUserInterfaceIdiomPad==UI_USER_INTERFACE_IDIOM()?1:.5;
+    if (isSickle(self.levelType)&&pathogenForLevel(self.levelType)==BBPathogenHIV) {
+        freq/=5;
+    }
+    return freq;
+}
+- (double)hivFrequency {//frequency that a hiv-infected white blood cell will create more HIV pathogens.
+    if (isSickle(self.levelType)) {
+        return .1;
+    }
+    return .4;
+}
+
+- (void)addHIV {
+    double hivFrequency = WAIT_BETWEEN_ADDING*[self hivFrequency];
+    for (BBWhiteBloodCell *wbc in self.whiteBloodCells) {
+        if ([wbc infectedHIV] && uniform(0, 1)<hivFrequency) {
+            BBPathogen *pathogen = [[BBPathogen alloc] initWithType:BBPathogenHIV];
+            
+            pathogen.delegate=self;
+            pathogen.position=wbc.position;
+            
+            [pathogen addToNode:self.plasma];
+            [self.pathogens addObject:pathogen];
+            [self setPathogenGraphics];
+            
+            pathogen.velocity=CGVectorMake(uniform(-60, -100), uniform(-40, 40));
+            pathogen.angularVelocity=uniform(-1, 1);
+        }
+    }
 }
 
 - (void)createObjects {
@@ -288,6 +330,7 @@ static double uniform(double min, double max) {
     if (uniform(0, 1)<pathogens) {
         [self addPathogen];
     }
+    [self addHIV];
 }
 
 -(id)initWithSize:(CGSize)size {    
@@ -296,7 +339,7 @@ static double uniform(double min, double max) {
         
         self.backgroundColor = [SKColor blackColor];
         
-        self.playerPower=[BBRedBloodCell power]*10;
+        self.playerPower=[BBRedBloodCell powerForLevelType:self.levelType]*10;
         
         [self addChild:self.plasma];
         [self.player addToNode:self.plasma];
@@ -317,6 +360,12 @@ static double uniform(double min, double max) {
         topWall.physicsBody.dynamic=NO;
         [self addChild:topWall];
         
+        SKSpriteNode *rightWall = [[SKSpriteNode alloc] initWithColor:[SKColor whiteColor] size:CGSizeMake(50, self.frame.size.height)];
+        rightWall.physicsBody=[SKPhysicsBody bodyWithRectangleOfSize:rightWall.size];
+        rightWall.physicsBody.dynamic=NO;
+        rightWall.position=CGPointMake(CGRectGetMaxX(self.frame)+100, CGRectGetMidY(self.frame));
+        [self addChild:rightWall];
+        
         self.physicsWorld.gravity=CGVectorMake(0, 0);
         self.physicsWorld.contactDelegate=self;
         
@@ -328,7 +377,7 @@ static double uniform(double min, double max) {
          
 - (void)movePlasma {
     int speed = -2000;
-    if (BBLevelArtery==self.levelType) {
+    if (isArtery(self.levelType)) {
         speed*=8;
     }
     speed-=100*self.pathogensMissed;
@@ -340,39 +389,16 @@ static double uniform(double min, double max) {
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    /* Called when a touch begins */
-    
-    //start moving player up
-    self.driving=YES;
-    self.targetPoint =[[touches anyObject] locationInNode:self.plasma];
-    
-    //SKAction *moveUpAction = [SKAction moveBy:CGVectorMake(0, 1000) duration:1];
-    //[self.player runAction:[SKAction repeatActionForever:moveUpAction] withKey:@"move up"];
-    /*
-    for (UITouch *touch in touches) {
-        CGPoint location = [touch locationInNode:self];
-        
-        SKSpriteNode *sprite = [SKSpriteNode spriteNodeWithImageNamed:@"Spaceship"];
-        
-        sprite.position = location;
-        
-        SKAction *action = [SKAction rotateByAngle:M_PI duration:1];
-        
-        [sprite runAction:[SKAction repeatActionForever:action]];
-        
-        [self addChild:sprite];
-    }*/
+    self.touches++;
+    self.targetOnScreen =[[touches anyObject] locationInNode:self];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    self.driving=NO;
-    //[self.player removeActionForKey:@"move up"];
+    self.touches--;
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    if (self.driving) {
-        self.targetPoint=[[touches anyObject] locationInNode:self.plasma];
-    }
+    self.targetOnScreen=[[touches anyObject] locationInNode:self];
 }
 
 - (BOOL)loops {
@@ -385,16 +411,16 @@ static double uniform(double min, double max) {
     if (!previousTime) previousTime=currentTime;
     //CFTimeInterval timestep = currentTime-previousTime;
     
-    if (self.driving && self.playerPower>0) {
-        CGFloat forceAngle = atan2(self.targetPoint.y-self.player.position.y, self.targetPoint.x-self.player.position.x);
-        CGFloat acceleration = sqrtf(pow(self.player.position.y-self.targetPoint.y, 2)+pow(self.player.position.x-self.targetPoint.x, 2))/2;
-        
+    if (self.touches && self.playerPower>0) {
+        CGPoint targetPoint = [self.plasma convertPoint:self.targetOnScreen fromNode:self];
+        CGFloat forceAngle = atan2(targetPoint.y-self.player.position.y, targetPoint.x-self.player.position.x);
+        CGFloat acceleration = sqrtf(pow(self.player.position.y-targetPoint.y, 2)+pow(self.player.position.x-targetPoint.x, 2))/2;
         [self.player applyAcceleration:CGVectorMake(acceleration*cos(forceAngle), acceleration*sin(forceAngle))];
+        
         self.playerPower-=acceleration;
-        //NSLog(@"player power:%g", self.playerPower);
     }
     static int prevPower = 0;
-    int newPower = self.playerPower/[BBRedBloodCell power];
+    int newPower = self.playerPower/[BBRedBloodCell powerForLevelType:self.levelType];
     if (prevPower!=newPower) {
         prevPower=newPower;
         self.powerLabel.text=[NSString stringWithFormat:@"Power: %d", newPower];
@@ -416,10 +442,19 @@ static double uniform(double min, double max) {
             if ([self loops]) {
                 node.position=[self convertPoint:CGPointMake(MAX_PLASMA_X, point.y) toNode:self.plasma];
             } else {
-                [node removeFromParent];
+                if (![self.player nodeIs:node]) {
+                    [node removeFromParent];
+                }
                 for (BBPathogen *pathogen in self.pathogens) {
                     if ([pathogen nodeIs:node]) {
+                        pathogen.displayed=NO;
                         self.pathogensMissed++;
+                    }
+                }
+                for (BBWhiteBloodCell *wbc in self.whiteBloodCells) {
+                    if ([wbc nodeIs:node]) {
+                        wbc.displayed=NO;
+                        self.pathogensMissed+=[wbc score];
                     }
                 }
             }

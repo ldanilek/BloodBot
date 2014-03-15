@@ -10,4 +10,8 @@
 
 @interface BBWhiteBloodCell : BBObject
 
+-(BOOL)infectedHIV;
+-(void)infectWithHIV;
+- (int)score;
+
 @end

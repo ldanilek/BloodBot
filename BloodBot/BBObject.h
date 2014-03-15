@@ -10,10 +10,17 @@
 #import <SpriteKit/SpriteKit.h>
 
 typedef enum {
-    BBLevelVein,
-    BBLevelArtery,
+    BBLevelVeinHIV,
+    BBLevelVeinBacteria,
+    BBLevelArteryHIV,
+    BBLevelArteryBacteria,
+    BBLevelVeinHIVSickle,
+    BBLevelVeinBacteriaSickle,
 } BBLevelType;
 
+static BOOL isArtery(BBLevelType levelType) {
+    return levelType==BBLevelArteryBacteria || levelType==BBLevelArteryHIV;
+}
 
 //abstract class
 //do not interact with this class directly
@@ -25,6 +32,10 @@ typedef enum {
 @end
 
 @interface BBObject : NSObject
+
+@property BOOL displayed;
+
+- (BOOL)nodeIs:(SKNode *)node;
 
 @property id <BBObjectDelegate> delegate;
 

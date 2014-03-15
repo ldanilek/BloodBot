@@ -19,39 +19,49 @@
 @implementation BBMenuViewController
 
 - (void)buttonPressed:(BBButtonView *)button {
-    if ([[button text] isEqualToString:@"Vein"]) {
-        [self performSegueWithIdentifier:@"Play" sender:button];
-    } else if ([[button text] isEqualToString:@"Artery"]) {
-        [self performSegueWithIdentifier:@"Play" sender:button];
-    }
+    [self performSegueWithIdentifier:@"Play" sender:button];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    BBLevelType level = BBLevelVein;
-    if ([[sender currentTitle] isEqualToString:@"Artery"]) {
-        level=BBLevelArtery;
-    }
-    [segue.destinationViewController setLevelType:level];
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UIView *)sender {
+    [segue.destinationViewController setLevelType:sender.tag];
+}
+
+- (void)makeButton:(NSString *)buttonText center:(CGPoint)center type:(BBLevelType)levelType {
+    int buttonHeight=40;
+    int buttonWidth = 150;
+    BBButtonView *button = [[BBButtonView alloc] initWithFrame:CGRectMake(center.x-buttonWidth/2, center.y-buttonHeight/2, buttonWidth, buttonHeight)];
+    button.delegate=self;
+    button.text=buttonText;
+    button.buttonColor=[UIColor brownColor];//redColor];
+    button.textColor=[UIColor whiteColor];
+    button.tag=levelType;
+    [self.view addSubview:button];
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     if (!self.loaded) {
         self.loaded=YES;
-        int buttonHeight=30;
-        int buttonWidth = 150;
-        BBButtonView *vein = [[BBButtonView alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.view.bounds)-buttonWidth/2, 40, buttonWidth, buttonHeight)];
-        vein.delegate=self;
-        vein.text=@"Vein";
-        vein.buttonColor=[UIColor redColor];
-        vein.textColor=[UIColor whiteColor];
-        BBButtonView *artery = [[BBButtonView alloc] initWithFrame:CGRectMake(CGRectGetMidX(self.view.bounds)-buttonWidth/2, 70+buttonHeight, buttonWidth, buttonHeight)];
-        artery.delegate=self;
-        artery.text=@"Artery";
-        artery.buttonColor=[UIColor redColor];
-        artery.textColor=[UIColor whiteColor];
-        [self.view addSubview:vein];
-        [self.view addSubview:artery];
+        int veinCenter = self.view.bounds.size.width/4;
+        int arteryCenter = veinCenter*3;
+        CGSize labelSize = CGSizeMake(100, 50);
+        UILabel *veinLabel = [[UILabel alloc] initWithFrame:CGRectMake(veinCenter-labelSize.width/2, 30, labelSize.width, labelSize.height)];
+        veinLabel.text=@"Vein";
+        veinLabel.font=[UIFont fontWithName:BBFONT size:30];
+        veinLabel.textAlignment=NSTextAlignmentCenter;
+        [self.view addSubview:veinLabel];
+        UILabel *arteryLabel = [[UILabel alloc] initWithFrame:CGRectMake(arteryCenter-labelSize.width/2, 30, labelSize.width, labelSize.height)];
+        arteryLabel.text=@"Artery";
+        [self.view addSubview:arteryLabel];
+        arteryLabel.font=[UIFont fontWithName:BBFONT size:30];
+        arteryLabel.textAlignment=NSTextAlignmentCenter;
+        
+        [self makeButton:@"HIV" center:CGPointMake(veinCenter, 100) type:BBLevelVeinHIV];
+        [self makeButton:@"Bacteria" center:CGPointMake(veinCenter, 160) type:BBLevelVeinBacteria];
+        [self makeButton:@"HIV" center:CGPointMake(arteryCenter, 100) type:BBLevelArteryHIV];
+        [self makeButton:@"Bacteria" center:CGPointMake(arteryCenter, 160) type:BBLevelArteryBacteria];
+        [self makeButton:@"Bacteria Sickle" center:CGPointMake(veinCenter, 220) type:BBLevelVeinBacteriaSickle];
+        [self makeButton:@"HIV Sickle" center:CGPointMake(veinCenter, 280) type:BBLevelVeinHIVSickle];
     }
 }
 

@@ -17,8 +17,7 @@
 
 @implementation BBRedBloodCell
 
-- (void)setOxygenated:(BOOL)oxygenated {
-    _oxygenated=oxygenated;
+- (void)setOxygenated:(BOOL)oxygenated sickled:(BOOL)sickled {
     static SKTexture *deoxygenatedTexture;
     if (!deoxygenatedTexture) {
         deoxygenatedTexture=[SKTexture textureWithImageNamed:@"Blue.png"];
@@ -27,16 +26,40 @@
     if (!oxygenatedTexture) {
         oxygenatedTexture=[SKTexture textureWithImageNamed:@"red-circle-hi.png"];
     }
-    if (oxygenated) self.node.texture=oxygenatedTexture;
+    static SKTexture *deoxygenatedSickleTexture;
+    if (!deoxygenatedSickleTexture) {
+        deoxygenatedSickleTexture=[SKTexture textureWithImageNamed:@"blueSickle.png"];
+    }
+    static SKTexture *oxygenatedSickleTexture;
+    if (!oxygenatedSickleTexture) {
+        oxygenatedSickleTexture=[SKTexture textureWithImageNamed:@"redSickle.png"];
+    }
+    if (oxygenated&&sickled) self.node.texture=oxygenatedSickleTexture;
+    else if (oxygenated) self.node.texture=oxygenatedTexture;
+    else if (sickled) self.node.texture=deoxygenatedSickleTexture;
     else self.node.texture=deoxygenatedTexture;
-    
 }
 
-+ (double)power {
+- (void)setOxygenated:(BOOL)oxygenated {
+    _oxygenated=oxygenated;
+    [self setOxygenated:oxygenated sickled:self.sickled];
+}
+
+- (void)setSickled:(BOOL)sickled {
+    _sickled=sickled;
+    [self setOxygenated:self.oxygenated sickled:sickled];
+}
+
++ (double)powerForLevelType:(BBLevelType)levelType {
+    double powerBasedOnDevice = 7000;
     if (UIUserInterfaceIdiomPhone==UI_USER_INTERFACE_IDIOM()) {
-        return 1000;
+        powerBasedOnDevice= 1000;
     }
-    return 8000;
+    double power = powerBasedOnDevice;
+    if (isSickle(levelType)) {
+        power/=2;
+    }
+    return power;
 }
 
 @dynamic node;
@@ -50,15 +73,16 @@
 }
 
 - (instancetype)init {
-    if (self=[self initOxygenated:YES]) {
+    if (self=[self initOxygenated:YES sickle:NO]) {
         
     }
     return self;
 }
 
-- (instancetype)initOxygenated:(BOOL)oxygenated {
+- (instancetype)initOxygenated:(BOOL)oxygenated sickle:(BOOL)sickled {
     if (self=[super init]) {
         self.oxygenated=oxygenated;
+        self.sickled=sickled;
         self.node.physicsBody.restitution=1;
         self.node.physicsBody.linearDamping=.3;
     }

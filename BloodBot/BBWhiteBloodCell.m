@@ -13,9 +13,24 @@
 
 @property SKSpriteNode *node;
 
+@property BOOL hivInfected;
+
 @end
 
 @implementation BBWhiteBloodCell
+
+- (int)score {
+    return [self hivInfected]*5;
+}
+
+- (void)infectWithHIV {
+    self.hivInfected=YES;
+    self.node.texture=[SKTexture textureWithImageNamed:@"infectedWBC.png"];
+}
+
+- (BOOL)infectedHIV {
+    return self.hivInfected;
+}
 
 @dynamic node;
 

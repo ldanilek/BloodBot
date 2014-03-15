@@ -63,17 +63,24 @@
 
 - (BBObject *)otherObjectInCollision:(SKPhysicsContact *)collision possibleObjects:(NSSet *)objects {
     SKNode *otherNode;
+    if (!self.displayed) {
+        return nil;
+    }
     if (collision.bodyA.node==self.node) {
         otherNode = collision.bodyB.node;
     } else if (collision.bodyB.node==self.node) {
         otherNode = collision.bodyA.node;
     }
     for (BBObject *obj in objects) {
-        if (obj.node==otherNode) {
+        if (obj.node==otherNode && obj.displayed) {
             return obj;
         }
     }
     return nil;
+}
+
+- (BOOL)nodeIs:(SKNode *)node {
+    return node==self.node;
 }
 
 - (void)absorbObject:(BBObject *)other {
@@ -81,14 +88,19 @@
 }
 
 - (BOOL)partOfCollision:(SKPhysicsContact *)collision {
+    if (!self.displayed) {
+        return NO;
+    }
     return self.node==collision.bodyA.node || self.node==collision.bodyB.node;
 }
 
 - (void)addToNode:(SKNode *)node {
+    self.displayed=YES;
     [node addChild:self.node];
 }
 
 - (void)remove {
+    self.displayed=NO;
     [self.node removeFromParent];
 }
 
