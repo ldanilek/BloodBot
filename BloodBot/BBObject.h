@@ -16,6 +16,8 @@ typedef enum {
     BBLevelArteryBacteria,
     BBLevelVeinHIVSickle,
     BBLevelVeinBacteriaSickle,
+    BBLevelVeinMalaria,
+    BBLevelVeinMalariaSickle,
 } BBLevelType;
 
 static BOOL isArtery(BBLevelType levelType) {
@@ -60,6 +62,7 @@ static BOOL isArtery(BBLevelType levelType) {
 - (double)radius;//for physicsbody only. if 0 (default), not circular
 
 @property (strong, nonatomic) SKNode *node;
+- (SKPhysicsBody *)physicsBody;
 
 #endif
 

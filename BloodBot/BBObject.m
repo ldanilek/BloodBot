@@ -46,19 +46,23 @@
         } else {
             _node = [[SKSpriteNode alloc] initWithColor:[UIColor whiteColor] size:CGSizeMake(10, 10)];
         }
-        if ([self radius]) {
-            _node.physicsBody=[SKPhysicsBody bodyWithCircleOfRadius:[self radius]];
-        } else {
-            int count;
-            CGPoint *outline = [self outline:&count];
-            CGMutablePathRef ref = CGPathCreateMutable();
-            CGPathMoveToPoint(ref, NULL, outline[count-1].x, outline[count-1].y);
-            CGPathAddLines(ref, NULL, outline, count);
-            CGPathRef path = CGPathCreateCopy(ref);
-            _node.physicsBody=[SKPhysicsBody bodyWithPolygonFromPath:path];
-        }
+        _node.physicsBody=[self physicsBody];
     }
     return _node;
+}
+
+- (SKPhysicsBody *)physicsBody {
+    if ([self radius]) {
+        return [SKPhysicsBody bodyWithCircleOfRadius:[self radius]];
+    } else {
+        int count;
+        CGPoint *outline = [self outline:&count];
+        CGMutablePathRef ref = CGPathCreateMutable();
+        CGPathMoveToPoint(ref, NULL, outline[count-1].x, outline[count-1].y);
+        CGPathAddLines(ref, NULL, outline, count);
+        CGPathRef path = CGPathCreateCopy(ref);
+        return [SKPhysicsBody bodyWithPolygonFromPath:path];
+    }
 }
 
 - (BBObject *)otherObjectInCollision:(SKPhysicsContact *)collision possibleObjects:(NSSet *)objects {

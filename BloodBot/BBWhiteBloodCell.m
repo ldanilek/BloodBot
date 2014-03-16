@@ -29,7 +29,7 @@
 }
 
 - (BOOL)infectedHIV {
-    return self.hivInfected;
+    return self.hivInfected && self.displayed;
 }
 
 @dynamic node;

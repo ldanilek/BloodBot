@@ -25,6 +25,8 @@
 		9BDEFDFC18D3FFDC004A3BC4 /* blueSickle.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BDEFDFA18D3FFDC004A3BC4 /* blueSickle.png */; };
 		9BDEFDFD18D3FFDC004A3BC4 /* redSickle.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BDEFDFB18D3FFDC004A3BC4 /* redSickle.png */; };
 		9BDEFE0018D4008D004A3BC4 /* BBGameOverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BDEFDFF18D4008D004A3BC4 /* BBGameOverViewController.m */; };
+		9BDEFE0218D40483004A3BC4 /* malaria.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BDEFE0118D40483004A3BC4 /* malaria.png */; };
+		9BDEFE0418D40CBA004A3BC4 /* malariaRed.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BDEFE0318D40CBA004A3BC4 /* malariaRed.png */; };
 		9BED8B5A18C7BD9A004EFAEC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BED8B5918C7BD9A004EFAEC /* Foundation.framework */; };
 		9BED8B5C18C7BD9A004EFAEC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BED8B5B18C7BD9A004EFAEC /* CoreGraphics.framework */; };
 		9BED8B5E18C7BD9A004EFAEC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BED8B5D18C7BD9A004EFAEC /* UIKit.framework */; };
@@ -83,6 +85,8 @@
 		9BDEFDFB18D3FFDC004A3BC4 /* redSickle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redSickle.png; sourceTree = "<group>"; };
 		9BDEFDFE18D4008D004A3BC4 /* BBGameOverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBGameOverViewController.h; sourceTree = "<group>"; };
 		9BDEFDFF18D4008D004A3BC4 /* BBGameOverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBGameOverViewController.m; sourceTree = "<group>"; };
+		9BDEFE0118D40483004A3BC4 /* malaria.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = malaria.png; sourceTree = "<group>"; };
+		9BDEFE0318D40CBA004A3BC4 /* malariaRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = malariaRed.png; sourceTree = "<group>"; };
 		9BED8B5618C7BD9A004EFAEC /* BloodBot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BloodBot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BED8B5918C7BD9A004EFAEC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9BED8B5B18C7BD9A004EFAEC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -196,6 +200,8 @@
 				9B79D47A18D0ED8100A1FC7C /* infectedWBC.png */,
 				9BDEFDFA18D3FFDC004A3BC4 /* blueSickle.png */,
 				9BDEFDFB18D3FFDC004A3BC4 /* redSickle.png */,
+				9BDEFE0118D40483004A3BC4 /* malaria.png */,
+				9BDEFE0318D40CBA004A3BC4 /* malariaRed.png */,
 				9BED8B7B18C7BD9A004EFAEC /* Images.xcassets */,
 				9BED8B6218C7BD9A004EFAEC /* Supporting Files */,
 			);
@@ -326,6 +332,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BED8B7A18C7BD9A004EFAEC /* Spaceship.png in Resources */,
+				9BDEFE0418D40CBA004A3BC4 /* malariaRed.png in Resources */,
 				9BA2D56F18CAA8A50000627D /* th.png in Resources */,
 				9BED8B7C18C7BD9A004EFAEC /* Images.xcassets in Resources */,
 				9B79D47918D0DC4800A1FC7C /* bacteria.png in Resources */,
@@ -339,6 +346,7 @@
 				9BDEFDFC18D3FFDC004A3BC4 /* blueSickle.png in Resources */,
 				9BA2D55918C8FAE10000627D /* red-circle-hi.png in Resources */,
 				9BA735A418CEAE43004C1EED /* WBC.png in Resources */,
+				9BDEFE0218D40483004A3BC4 /* malaria.png in Resources */,
 				9BED8B6F18C7BD9A004EFAEC /* Main_iPhone.storyboard in Resources */,
 				9BED8B6618C7BD9A004EFAEC /* InfoPlist.strings in Resources */,
 			);

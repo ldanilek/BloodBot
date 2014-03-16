@@ -12,32 +12,51 @@
 @interface BBRedBloodCell ()
 
 @property SKSpriteNode *node;
+@property BOOL malaria;
 
 @end
 
 @implementation BBRedBloodCell
 
+- (BOOL)infectedMalaria {
+    return self.malaria && self.displayed;
+}
+
+- (void)infectWithMalaria {
+    if (!self.sickled) {
+        self.malaria=YES;
+        self.oxygenated=NO;
+        static SKTexture *malarialTexture;
+        if (!malarialTexture) {
+            malarialTexture=[SKTexture textureWithImageNamed:@"malariaRed.png"];
+        }
+        self.node.texture=malarialTexture;
+    }
+}
+
 - (void)setOxygenated:(BOOL)oxygenated sickled:(BOOL)sickled {
-    static SKTexture *deoxygenatedTexture;
-    if (!deoxygenatedTexture) {
-        deoxygenatedTexture=[SKTexture textureWithImageNamed:@"Blue.png"];
+    if (!self.malaria) {
+        static SKTexture *deoxygenatedTexture;
+        if (!deoxygenatedTexture) {
+            deoxygenatedTexture=[SKTexture textureWithImageNamed:@"Blue.png"];
+        }
+        static SKTexture *oxygenatedTexture;
+        if (!oxygenatedTexture) {
+            oxygenatedTexture=[SKTexture textureWithImageNamed:@"red-circle-hi.png"];
+        }
+        static SKTexture *deoxygenatedSickleTexture;
+        if (!deoxygenatedSickleTexture) {
+            deoxygenatedSickleTexture=[SKTexture textureWithImageNamed:@"blueSickle.png"];
+        }
+        static SKTexture *oxygenatedSickleTexture;
+        if (!oxygenatedSickleTexture) {
+            oxygenatedSickleTexture=[SKTexture textureWithImageNamed:@"redSickle.png"];
+        }
+        if (oxygenated&&sickled) self.node.texture=oxygenatedSickleTexture;
+        else if (oxygenated) self.node.texture=oxygenatedTexture;
+        else if (sickled) self.node.texture=deoxygenatedSickleTexture;
+        else self.node.texture=deoxygenatedTexture;
     }
-    static SKTexture *oxygenatedTexture;
-    if (!oxygenatedTexture) {
-        oxygenatedTexture=[SKTexture textureWithImageNamed:@"red-circle-hi.png"];
-    }
-    static SKTexture *deoxygenatedSickleTexture;
-    if (!deoxygenatedSickleTexture) {
-        deoxygenatedSickleTexture=[SKTexture textureWithImageNamed:@"blueSickle.png"];
-    }
-    static SKTexture *oxygenatedSickleTexture;
-    if (!oxygenatedSickleTexture) {
-        oxygenatedSickleTexture=[SKTexture textureWithImageNamed:@"redSickle.png"];
-    }
-    if (oxygenated&&sickled) self.node.texture=oxygenatedSickleTexture;
-    else if (oxygenated) self.node.texture=oxygenatedTexture;
-    else if (sickled) self.node.texture=deoxygenatedSickleTexture;
-    else self.node.texture=deoxygenatedTexture;
 }
 
 - (void)setOxygenated:(BOOL)oxygenated {

@@ -62,6 +62,8 @@
         [self makeButton:@"Bacteria" center:CGPointMake(arteryCenter, 160) type:BBLevelArteryBacteria];
         [self makeButton:@"Bacteria Sickle" center:CGPointMake(veinCenter, 220) type:BBLevelVeinBacteriaSickle];
         [self makeButton:@"HIV Sickle" center:CGPointMake(veinCenter, 280) type:BBLevelVeinHIVSickle];
+        [self makeButton:@"Malaria" center:CGPointMake(veinCenter, 340) type:BBLevelVeinMalaria];
+        [self makeButton:@"Malaria Sickle" center:CGPointMake(veinCenter, 400) type:BBLevelVeinMalariaSickle];
     }
 }
 

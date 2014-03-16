@@ -11,10 +11,11 @@
 typedef enum {
     BBPathogenBacteria,
     BBPathogenHIV,
+    BBPathogenMalaria,
 } BBPathogenType;
 
 static BBPathogenType pathogenForLevel(BBLevelType levelType) {
-    return (levelType==BBLevelArteryBacteria||levelType==BBLevelVeinBacteria||levelType==BBLevelVeinBacteriaSickle) ? BBPathogenBacteria : BBPathogenHIV;
+    return (levelType==BBLevelArteryBacteria||levelType==BBLevelVeinBacteria||levelType==BBLevelVeinBacteriaSickle) ? BBPathogenBacteria : (levelType==BBLevelArteryHIV||levelType==BBLevelVeinHIV||levelType==BBLevelVeinHIVSickle) ? BBPathogenHIV : BBPathogenMalaria;
 }
 
 @interface BBPathogen : BBObject

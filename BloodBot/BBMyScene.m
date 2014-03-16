@@ -104,10 +104,15 @@ static double uniform(double min, double max) {
     
     //check for objects touched by player
     BBRedBloodCell *redCell = (BBRedBloodCell *)[self.player otherObjectInCollision:contact possibleObjects:self.redBloodCells];
-    if (redCell && redCell.oxygenated) {
+    if ([redCell infectedMalaria]) {
+        [self.player absorbObject:redCell];
+        self.pathogensKilled++;
+        [redCell remove];
+    } else if (redCell.oxygenated) {
         self.playerPower+=[BBRedBloodCell powerForLevelType:self.levelType];
         redCell.oxygenated=NO;
     }
+    
     BBWhiteBloodCell *whiteCell = (BBWhiteBloodCell *)[self.player otherObjectInCollision:contact possibleObjects:self.whiteBloodCells];
     if (whiteCell) {
         if ([whiteCell infectedHIV]) {
@@ -135,20 +140,24 @@ static double uniform(double min, double max) {
         }
         pathogen = (BBPathogen *)[whiteCell otherObjectInCollision:contact possibleObjects:self.pathogens];
         if (pathogen) {
-            if (pathogen.pathogenType==BBPathogenBacteria) {
+            if (pathogen.pathogenType==BBPathogenHIV) {
+                [whiteCell infectWithHIV];
+            } else {
                 self.pathogensKilled++;
                 [whiteCell absorbObject:pathogen];
                 [pathogen remove];
-            } else if (pathogen.pathogenType==BBPathogenHIV) {
-                [whiteCell infectWithHIV];
             }
         }
     }
     
-    if (!pathogen) {//player and white cell didn't kill pathogen. check if pathogen should absorb O2
+    if (!pathogen) {//player and white cell didn't kill pathogen. check if pathogen touched rbc
         for (BBPathogen *pathogen in self.pathogens) {
             BBRedBloodCell *red = (BBRedBloodCell *)[pathogen otherObjectInCollision:contact possibleObjects:self.redBloodCells];
-            red.oxygenated=NO;
+            if (pathogen.pathogenType==BBPathogenMalaria) {
+                [red infectWithMalaria];
+            } else {
+                red.oxygenated=NO;
+            }
         }
     }
     
@@ -288,6 +297,9 @@ static double uniform(double min, double max) {
     }
     return .4;
 }
+- (double)malariaFrequency {//frequency that an malaria-infected rbc will burst into more malaria pathogens
+    return .01;
+}
 
 - (void)addHIV {
     double hivFrequency = WAIT_BETWEEN_ADDING*[self hivFrequency];
@@ -301,9 +313,28 @@ static double uniform(double min, double max) {
             [pathogen addToNode:self.plasma];
             [self.pathogens addObject:pathogen];
             [self setPathogenGraphics];
-            
-            pathogen.velocity=CGVectorMake(uniform(-60, -100), uniform(-40, 40));
-            pathogen.angularVelocity=uniform(-1, 1);
+        }
+    }
+}
+
+#define MIN_MALARIA_CREATED 2
+#define MAX_MALARIA_CREATED 3
+- (void)addMalaria {
+    double malariaFrequency = WAIT_BETWEEN_ADDING*[self malariaFrequency];
+    for (BBRedBloodCell *rbc in self.redBloodCells) {
+        if ([rbc infectedMalaria] && uniform(0, 1)<malariaFrequency) {
+            int randomNumber = uniform(MIN_MALARIA_CREATED, MAX_MALARIA_CREATED+1);
+            for (int i=0; i<randomNumber; i++) {
+                BBPathogen *malaria = [[BBPathogen alloc] initWithType:BBPathogenMalaria];
+                
+                malaria.delegate=self;
+                malaria.position=rbc.position;
+                malaria.velocity=rbc.velocity;
+                
+                [malaria addToNode:self.plasma];
+                [self.pathogens addObject:malaria];
+            }
+            [rbc remove];
         }
     }
 }
@@ -330,6 +361,7 @@ static double uniform(double min, double max) {
     if (uniform(0, 1)<pathogens) {
         [self addPathogen];
     }
+    [self addMalaria];
     [self addHIV];
 }
 
@@ -338,8 +370,6 @@ static double uniform(double min, double max) {
         /* Setup your scene here */
         
         self.backgroundColor = [SKColor blackColor];
-        
-        self.playerPower=[BBRedBloodCell powerForLevelType:self.levelType]*10;
         
         [self addChild:self.plasma];
         [self.player addToNode:self.plasma];
@@ -373,6 +403,11 @@ static double uniform(double min, double max) {
         [self runAction:[SKAction repeatActionForever:[SKAction sequence:@[[SKAction waitForDuration:WAIT_BETWEEN_ADDING], [SKAction performSelector:@selector(createObjects) onTarget:self]]]]];
     }
     return self;
+}
+
+- (void)setLevelType:(BBLevelType)levelType {
+    _levelType=levelType;
+    self.playerPower=[BBRedBloodCell powerForLevelType:self.levelType]*10;
 }
          
 - (void)movePlasma {

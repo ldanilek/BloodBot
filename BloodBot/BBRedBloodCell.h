@@ -9,7 +9,7 @@
 #import "BBObject.h"
 
 static BOOL isSickle(BBLevelType levelType) {
-    return levelType==BBLevelVeinBacteriaSickle||levelType==BBLevelVeinHIVSickle;
+    return levelType==BBLevelVeinBacteriaSickle||levelType==BBLevelVeinHIVSickle||levelType==BBLevelVeinMalariaSickle;
 }
 
 @interface BBRedBloodCell : BBObject
@@ -21,5 +21,8 @@ static BOOL isSickle(BBLevelType levelType) {
 @property (nonatomic) BOOL sickled;
 
 + (double)powerForLevelType:(BBLevelType)levelType;
+
+- (void)infectWithMalaria;
+- (BOOL)infectedMalaria;
 
 @end
