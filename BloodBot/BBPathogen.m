@@ -73,6 +73,8 @@
     if (self.pathogenType==BBPathogenBacteria||self.pathogenType==BBPathogenHIV) {
         return [super physicsBody];
     }
+    
+    //for malaria, must compose a square and a diamond to make the cool shape
     int sqcount = 4;
     CGPoint sqoutline[4];
     int size=9;

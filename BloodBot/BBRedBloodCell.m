@@ -31,8 +31,12 @@
             malarialTexture=[SKTexture textureWithImageNamed:@"malariaRed.png"];
         }
         self.node.texture=malarialTexture;
+        self.node.physicsBody.mass=.02;
     }
 }
+
+#define OXYGENATED_MASS .0035
+#define DEOXYGENATED_MASS .001
 
 - (void)setOxygenated:(BOOL)oxygenated sickled:(BOOL)sickled {
     if (!self.malaria) {
@@ -62,6 +66,11 @@
 - (void)setOxygenated:(BOOL)oxygenated {
     _oxygenated=oxygenated;
     [self setOxygenated:oxygenated sickled:self.sickled];
+    if (oxygenated) {
+        self.node.physicsBody.mass=OXYGENATED_MASS;
+    } else {
+        self.node.physicsBody.mass=DEOXYGENATED_MASS;
+    }
 }
 
 - (void)setSickled:(BOOL)sickled {
@@ -70,9 +79,9 @@
 }
 
 + (double)powerForLevelType:(BBLevelType)levelType {
-    double powerBasedOnDevice = 7000;
+    double powerBasedOnDevice = 10000;
     if (UIUserInterfaceIdiomPhone==UI_USER_INTERFACE_IDIOM()) {
-        powerBasedOnDevice= 1000;
+        powerBasedOnDevice= 3000;
     }
     double power = powerBasedOnDevice;
     if (isSickle(levelType)) {

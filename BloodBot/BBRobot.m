@@ -40,7 +40,7 @@
     if (self=[super init]) {
         self.node.physicsBody.contactTestBitMask=1;
         self.node.physicsBody.angularDamping=8;//technically this should be between 0 and 1. higher is better, though
-        if (isArtery([self.delegate levelType])) {
+        if (isArtery([self.delegate levelType].location)) {
             self.node.physicsBody.linearDamping=1;
         }
         self.node.anchorPoint=CGPointMake(0.5, .5);

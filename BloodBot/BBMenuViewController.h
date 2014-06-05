@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BBButtonView.h"
 
 @interface BBMenuViewController : UIViewController
+
+@property (nonatomic, weak) IBOutlet UILabel *personLabel;
+@property (nonatomic, weak) IBOutlet UILabel *locationLabel;
+@property (nonatomic, weak) IBOutlet UILabel *pathogenLabel;
+
 
 @end

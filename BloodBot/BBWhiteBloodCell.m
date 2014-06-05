@@ -20,7 +20,7 @@
 @implementation BBWhiteBloodCell
 
 - (int)score {
-    return [self hivInfected]*5;
+    return 0;//[self hivInfected]*5;
 }
 
 - (void)infectWithHIV {

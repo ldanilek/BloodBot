@@ -9,7 +9,7 @@
 #import "BBObject.h"
 
 static BOOL isSickle(BBLevelType levelType) {
-    return levelType==BBLevelVeinBacteriaSickle||levelType==BBLevelVeinHIVSickle||levelType==BBLevelVeinMalariaSickle;
+    return levelType.person==BBPersonSickle;
 }
 
 @interface BBRedBloodCell : BBObject

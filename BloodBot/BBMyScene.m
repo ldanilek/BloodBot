@@ -169,15 +169,11 @@ static double uniform(double min, double max) {
     return -self.plasma.position.x*DISTANCE_FACTOR;
 }
 
-- (int)score {
-    return self.pathogensKilled-self.pathogensMissed+[self pointsDueToDistance];
-}
-
 - (void)setPathogenGraphics {
     static int prevScore = -1;
-    int currentScore = self.score;
+    int currentScore = 100-self.pathogensMissed;
     if (prevScore!=currentScore) {
-        self.pathogenLabel.text=[NSString stringWithFormat:@"Score: %d", currentScore];
+        self.pathogenLabel.text=[NSString stringWithFormat:@"Lives: %d", currentScore];
         prevScore=currentScore;
     }
 }
@@ -229,7 +225,7 @@ static double uniform(double min, double max) {
 
 - (void)addRedBloodCell {
     BOOL oxygenated = uniform(0, 1)<ARTERY_OXYGENATED;
-    if (!isArtery(self.levelType)) {
+    if (!isArtery(self.levelType.location)) {
         oxygenated=uniform(0, 1)<VEIN_OXYGENATED;
     }
     BBRedBloodCell *red = [[BBRedBloodCell alloc] initOxygenated:oxygenated sickle:isSickle(self.levelType)];
@@ -259,7 +255,7 @@ static double uniform(double min, double max) {
 }
 
 - (void)addPathogen {
-    BBPathogen *pathogen = [[BBPathogen alloc] initWithType:pathogenForLevel(self.levelType)];
+    BBPathogen *pathogen = [[BBPathogen alloc] initWithType:self.levelType.pathogenType];
     pathogen.delegate=self;
     pathogen.position=[self randomRightPlasmaLocation];
     
@@ -275,7 +271,7 @@ static double uniform(double min, double max) {
 //average frequency of adding
 - (double)redCellFrequency {
     double freq = UIUserInterfaceIdiomPad==UI_USER_INTERFACE_IDIOM()? 5: 2;
-    if (isArtery(self.levelType)) {
+    if (isArtery(self.levelType.location)) {
         freq*=5;
     }
     
@@ -286,7 +282,7 @@ static double uniform(double min, double max) {
 }
 - (double)pathogenFrequency {
     double freq = UIUserInterfaceIdiomPad==UI_USER_INTERFACE_IDIOM()?1:.5;
-    if (isSickle(self.levelType)&&pathogenForLevel(self.levelType)==BBPathogenHIV) {
+    if (isSickle(self.levelType)&&self.levelType.pathogenType==BBPathogenHIV) {
         freq/=5;
     }
     return freq;
@@ -412,7 +408,7 @@ static double uniform(double min, double max) {
          
 - (void)movePlasma {
     int speed = -2000;
-    if (isArtery(self.levelType)) {
+    if (isArtery(self.levelType.location)) {
         speed*=8;
     }
     speed-=100*self.pathogensMissed;
@@ -449,7 +445,8 @@ static double uniform(double min, double max) {
     if (self.touches && self.playerPower>0) {
         CGPoint targetPoint = [self.plasma convertPoint:self.targetOnScreen fromNode:self];
         CGFloat forceAngle = atan2(targetPoint.y-self.player.position.y, targetPoint.x-self.player.position.x);
-        CGFloat acceleration = sqrtf(pow(self.player.position.y-targetPoint.y, 2)+pow(self.player.position.x-targetPoint.x, 2))/2;
+        CGFloat distance = sqrtf(pow(self.player.position.y-targetPoint.y, 2)+pow(self.player.position.x-targetPoint.x, 2));
+        CGFloat acceleration = self.playerPower/100000 * distance;
         [self.player applyAcceleration:CGVectorMake(acceleration*cos(forceAngle), acceleration*sin(forceAngle))];
         
         self.playerPower-=acceleration;
@@ -458,7 +455,7 @@ static double uniform(double min, double max) {
     int newPower = self.playerPower/[BBRedBloodCell powerForLevelType:self.levelType];
     if (prevPower!=newPower) {
         prevPower=newPower;
-        self.powerLabel.text=[NSString stringWithFormat:@"Power: %d", newPower];
+        self.powerLabel.text=[NSString stringWithFormat:@"Fuel: %d", newPower];
     }
     
     //scene coordinates

@@ -27,6 +27,7 @@
 		9BDEFE0018D4008D004A3BC4 /* BBGameOverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BDEFDFF18D4008D004A3BC4 /* BBGameOverViewController.m */; };
 		9BDEFE0218D40483004A3BC4 /* malaria.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BDEFE0118D40483004A3BC4 /* malaria.png */; };
 		9BDEFE0418D40CBA004A3BC4 /* malariaRed.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BDEFE0318D40CBA004A3BC4 /* malariaRed.png */; };
+		9BE26574193A17DA006673D7 /* BBChooserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BE26573193A17DA006673D7 /* BBChooserViewController.m */; };
 		9BED8B5A18C7BD9A004EFAEC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BED8B5918C7BD9A004EFAEC /* Foundation.framework */; };
 		9BED8B5C18C7BD9A004EFAEC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BED8B5B18C7BD9A004EFAEC /* CoreGraphics.framework */; };
 		9BED8B5E18C7BD9A004EFAEC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BED8B5D18C7BD9A004EFAEC /* UIKit.framework */; };
@@ -87,6 +88,8 @@
 		9BDEFDFF18D4008D004A3BC4 /* BBGameOverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBGameOverViewController.m; sourceTree = "<group>"; };
 		9BDEFE0118D40483004A3BC4 /* malaria.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = malaria.png; sourceTree = "<group>"; };
 		9BDEFE0318D40CBA004A3BC4 /* malariaRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = malariaRed.png; sourceTree = "<group>"; };
+		9BE26572193A17DA006673D7 /* BBChooserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBChooserViewController.h; sourceTree = "<group>"; };
+		9BE26573193A17DA006673D7 /* BBChooserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBChooserViewController.m; sourceTree = "<group>"; };
 		9BED8B5618C7BD9A004EFAEC /* BloodBot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BloodBot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BED8B5918C7BD9A004EFAEC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9BED8B5B18C7BD9A004EFAEC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -179,6 +182,8 @@
 				9BED8B7018C7BD9A004EFAEC /* Main_iPad.storyboard */,
 				9BA2D55C18CA51310000627D /* BBMenuViewController.h */,
 				9BA2D55D18CA51310000627D /* BBMenuViewController.m */,
+				9BE26572193A17DA006673D7 /* BBChooserViewController.h */,
+				9BE26573193A17DA006673D7 /* BBChooserViewController.m */,
 				9BED8B7318C7BD9A004EFAEC /* BBViewController.h */,
 				9BED8B7418C7BD9A004EFAEC /* BBViewController.m */,
 				9B79D47518D008C300A1FC7C /* BBButtonView.h */,
@@ -377,6 +382,7 @@
 				9BA2D56D18CAA0B70000627D /* BBPathogen.m in Sources */,
 				9BA2D55E18CA51310000627D /* BBMenuViewController.m in Sources */,
 				9BA2D56A18CA9F250000627D /* BBRedBloodCell.m in Sources */,
+				9BE26574193A17DA006673D7 /* BBChooserViewController.m in Sources */,
 				9BED8B7818C7BD9A004EFAEC /* BBMyScene.m in Sources */,
 				9BED8B6818C7BD9A004EFAEC /* main.m in Sources */,
 			);
@@ -471,6 +477,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "B61F0A47-5070-46B9-953E-B09343896B38";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -504,6 +511,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PROVISIONING_PROFILE = "B61F0A47-5070-46B9-953E-B09343896B38";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -519,7 +527,9 @@
 				GCC_PREFIX_HEADER = "BloodBot/BloodBot-Prefix.pch";
 				INFOPLIST_FILE = "BloodBot/BloodBot-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "B61F0A47-5070-46B9-953E-B09343896B38";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -533,7 +543,9 @@
 				GCC_PREFIX_HEADER = "BloodBot/BloodBot-Prefix.pch";
 				INFOPLIST_FILE = "BloodBot/BloodBot-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "B61F0A47-5070-46B9-953E-B09343896B38";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
+				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

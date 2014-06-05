@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <SpriteKit/SpriteKit.h>
-
+/*
 typedef enum {
     BBLevelVeinHIV,
     BBLevelVeinBacteria,
@@ -19,10 +19,38 @@ typedef enum {
     BBLevelVeinMalaria,
     BBLevelVeinMalariaSickle,
 } BBLevelType;
+*/
+typedef enum {
+    BBLocationVein,
+    BBLocationArtery
+} BBLocation;
 
-static BOOL isArtery(BBLevelType levelType) {
-    return levelType==BBLevelArteryBacteria || levelType==BBLevelArteryHIV;
+#define LOCATIONS 2
+
+typedef enum {
+    BBPersonAverage,
+    BBPersonSickle
+} BBPerson;
+
+#define PEOPLE 2
+
+typedef enum {
+    BBPathogenBacteria,
+    BBPathogenHIV,
+    BBPathogenMalaria,
+} BBPathogenType;
+
+#define PATHOGENS 3
+
+static BOOL isArtery(BBLocation location) {
+    return location==BBLocationArtery;
 }
+
+typedef struct {
+    BBPerson person;
+    BBLocation location;
+    BBPathogenType pathogenType;
+} BBLevelType;
 
 //abstract class
 //do not interact with this class directly
