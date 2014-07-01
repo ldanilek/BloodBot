@@ -9,6 +9,22 @@
 #import <UIKit/UIKit.h>
 #import "BBButtonView.h"
 
+@class BBGameOverViewController;
+
+@protocol BBGameOverProtocol <NSObject>
+
+- (void)toMenu:(BBGameOverViewController *)vc;
+@optional
+- (void)resume:(BBGameOverViewController *)vc;
+
+@end
+
 @interface BBGameOverViewController : UIViewController
+
+@property UIImage *initialImage;
+@property (nonatomic, weak) id <BBGameOverProtocol> delegate;
+
+@property BOOL justPaused;//include resume button
+@property NSString *message;//just shown if game over, not just paused
 
 @end

@@ -44,7 +44,7 @@
         if ([self imageName]) {
             _node = [[SKSpriteNode alloc] initWithImageNamed:[self imageName]];
         } else {
-            _node = [[SKSpriteNode alloc] initWithColor:[UIColor whiteColor] size:CGSizeMake(10, 10)];
+            _node = [[SKSpriteNode alloc] initWithColor:[UIColor whiteColor] size:CGSizeMake(30, 30)];
         }
         _node.physicsBody=[self physicsBody];
     }
@@ -88,7 +88,11 @@
 }
 
 - (void)absorbObject:(BBObject *)other {
-    self.node.physicsBody.mass+=other.node.physicsBody.mass;
+    //self.node.physicsBody.mass+=other.node.physicsBody.mass;
+}
+
+- (void)grow {
+    [self.node runAction:[SKAction scaleTo:2 duration:0]];
 }
 
 - (BOOL)partOfCollision:(SKPhysicsContact *)collision {
@@ -104,8 +108,11 @@
 }
 
 - (void)remove {
-    self.displayed=NO;
-    [self.node removeFromParent];
+    [self.node runAction:[SKAction scaleTo:0 duration:.5] completion:^{
+        self.displayed=NO;
+        [self.node removeFromParent];
+    }];
+    
 }
 
 - (CGPoint *)outline:(int *)count { //counterclockwise and not self-intersecting

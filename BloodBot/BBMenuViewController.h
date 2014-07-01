@@ -14,6 +14,6 @@
 @property (nonatomic, weak) IBOutlet UILabel *personLabel;
 @property (nonatomic, weak) IBOutlet UILabel *locationLabel;
 @property (nonatomic, weak) IBOutlet UILabel *pathogenLabel;
-
+@property (nonatomic, weak) IBOutlet UILabel *highScoreLabel;
 
 @end

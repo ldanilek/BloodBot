@@ -21,11 +21,13 @@ typedef enum {
 } BBLevelType;
 */
 typedef enum {
-    BBLocationVein,
-    BBLocationArtery
+    BBLocationVenaCava,
+    BBLocationPulmonaryArtery,
+    BBLocationPulmonaryVein,
+    BBLocationCarotidArtery,
 } BBLocation;
 
-#define LOCATIONS 2
+#define LOCATIONS 4
 
 typedef enum {
     BBPersonAverage,
@@ -35,15 +37,39 @@ typedef enum {
 #define PEOPLE 2
 
 typedef enum {
-    BBPathogenBacteria,
+    BBPathogenTB,
     BBPathogenHIV,
     BBPathogenMalaria,
 } BBPathogenType;
 
 #define PATHOGENS 3
 
-static BOOL isArtery(BBLocation location) {
-    return location==BBLocationArtery;
+//range of 0 to 5
+static double bloodSpeed(BBLocation location) {
+    switch (location) {
+        case BBLocationCarotidArtery://from the left ventricle. strongest
+            return 5;
+            break;
+            
+        case BBLocationPulmonaryArtery://from the right ventricle. strong
+            return 4;
+            break;
+            
+        case BBLocationPulmonaryVein://from the lungs. not too strong
+            return 3;
+            break;
+
+        case BBLocationVenaCava://from the body. not strong at all
+            return 1;
+            break;
+
+        default:
+            break;
+    }
+    return 0;
+}
+static BOOL isOxygenated(BBLocation location) {
+    return location==BBLocationPulmonaryVein||location==BBLocationCarotidArtery;
 }
 
 typedef struct {
@@ -51,6 +77,20 @@ typedef struct {
     BBLocation location;
     BBPathogenType pathogenType;
 } BBLevelType;
+
+#define PRIME_NUM 31 //must be bigger than PATHOGENS, LOCATIONS, and PEOPLE (bigger than each)
+static NSUInteger levelHash(BBLevelType levelType) {
+    return levelType.person*PRIME_NUM*PRIME_NUM + levelType.location*PRIME_NUM + levelType.pathogenType;
+}
+
+static BBLevelType unhashLevel(NSUInteger hash) {
+    BBLevelType level;
+    level.pathogenType = hash % PRIME_NUM;
+    hash /= PRIME_NUM;
+    level.location = hash % PRIME_NUM;
+    level.person = hash/PRIME_NUM;
+    return level;
+}
 
 //abstract class
 //do not interact with this class directly
@@ -81,6 +121,8 @@ typedef struct {
 - (BBObject *)otherObjectInCollision:(SKPhysicsContact *)collision possibleObjects:(NSSet *)objects;
 - (BOOL)partOfCollision:(SKPhysicsContact *)collision;
 - (void)absorbObject:(BBObject *)other;
+
+- (void)grow;
 
 #ifdef UNLOCK_BBOBJECT_PROTECTED //only define this in implementation files of subclasses
 

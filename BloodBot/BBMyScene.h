@@ -15,6 +15,7 @@
 
 #define PLAYER_DESTROYED @"Player Gone"
 
+#define ARTERY_SPEED_MULTIPLIER 4 //also multiply frequencies
 
 @interface BBMyScene : SKScene <BBObjectDelegate>
 
@@ -23,5 +24,10 @@
 - (void)viewDidAppear;
 
 @property (nonatomic) BBLevelType levelType;
+
+@property (nonatomic) BOOL stopped;
+
+@property int touches;
+- (int)score;
 
 @end

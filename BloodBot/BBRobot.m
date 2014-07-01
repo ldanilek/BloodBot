@@ -27,11 +27,14 @@
 - (CGPoint *)outline:(int *)count {
     //note the static
     static CGPoint points[5];
-    points[0]=CGPointMake(-25, -6);
-    points[1]=CGPointMake(12, -6);
-    points[2]=CGPointMake(25, 0);
-    points[3]=CGPointMake(12, 6);
-    points[4]=CGPointMake(-25, 6);
+    CGFloat height = 10;
+    CGFloat length = 45;
+    CGFloat tipLength = 13;
+    points[0]=CGPointMake(-length/2, -height/2);
+    points[1]=CGPointMake(length/2-tipLength, -height/2);
+    points[2]=CGPointMake(length/2, 0);
+    points[3]=CGPointMake(length/2-tipLength, height/2);
+    points[4]=CGPointMake(-length/2, height/2);
     *count=5;
     return points;
 }
@@ -40,9 +43,7 @@
     if (self=[super init]) {
         self.node.physicsBody.contactTestBitMask=1;
         self.node.physicsBody.angularDamping=8;//technically this should be between 0 and 1. higher is better, though
-        if (isArtery([self.delegate levelType].location)) {
-            self.node.physicsBody.linearDamping=1;
-        }
+        self.node.physicsBody.linearDamping=.5;
         self.node.anchorPoint=CGPointMake(0.5, .5);
     }
     return self;
@@ -52,9 +53,10 @@
     CGPoint center = [self.node.scene convertPoint:self.node.position fromNode:self.node.parent];
     CGPoint accelerationPoint = center;
     CGPoint fixedPoint = accelerationPoint;
-    accelerationPoint.x+=[(SKSpriteNode *)self.node size].width*cos(self.node.zRotation)/2;
-    accelerationPoint.y+=[(SKSpriteNode *)self.node size].width*sin(self.node.zRotation)/2;
-    CGVector relativeLocationOfFixedPoint = CGVectorMake(-[(SKSpriteNode *)self.node size].width*cos(self.node.zRotation)/2, -[(SKSpriteNode *)self.node size].width*sin(self.node.zRotation)/2);
+    CGFloat width = [(SKSpriteNode *)self.node size].width;
+    accelerationPoint.x+=width*cos(self.node.zRotation)/2;
+    accelerationPoint.y+=width*sin(self.node.zRotation)/2;
+    CGVector relativeLocationOfFixedPoint = CGVectorMake(-width*cos(self.node.zRotation)/2, -width*sin(self.node.zRotation)/2);
     fixedPoint.x+=relativeLocationOfFixedPoint.dx;
     fixedPoint.y+=relativeLocationOfFixedPoint.dy;
     //acceleration must be constant. do not maintain force with mass increase

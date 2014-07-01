@@ -9,6 +9,18 @@
 #import <UIKit/UIKit.h>
 #import <SpriteKit/SpriteKit.h>
 
+@class BBViewController;
+
+@protocol BBGameDelegate <NSObject>
+
+- (void)gameOver:(BBViewController *)vc;
+- (void)gameHasScore:(int)score;
+
+@end
+
+
 @interface BBViewController : UIViewController
+
+@property (weak) id <BBGameDelegate> delegate;
 
 @end

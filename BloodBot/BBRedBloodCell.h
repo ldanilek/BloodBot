@@ -8,8 +8,8 @@
 
 #import "BBObject.h"
 
-static BOOL isSickle(BBLevelType levelType) {
-    return levelType.person==BBPersonSickle;
+static BOOL isSickle(BBPerson person) {
+    return person==BBPersonSickle;
 }
 
 @interface BBRedBloodCell : BBObject
@@ -24,5 +24,8 @@ static BOOL isSickle(BBLevelType levelType) {
 
 - (void)infectWithMalaria;
 - (BOOL)infectedMalaria;
+//- (void)runAction:(SKAction *)action;
+
+- (BOOL)shouldBecomeMalaria;
 
 @end

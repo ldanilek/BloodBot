@@ -59,10 +59,11 @@
         case BBPathogenChooser:
         {
             switch ((BBPathogenType)choice) {
-                case BBPathogenBacteria:
-                    name=@"Bacteria";
+                case BBPathogenTB:
+                    name=@"Tuberculosis";
                     //http://www.buzzle.com/articles/bacterial-blood-infection.html
-                    *description=@"Bacteria in the blood are bad news, so you don't want to let any by your defense.";
+                    //from wikipedia and cdc.gov/tb
+                    *description=@"TB spreads through the air and has a tendency to become resistant to treatment. This bacteria usually infects the lungs but can also attack the brain or other organs.";
                     break;
                     
                 case BBPathogenHIV:
@@ -84,14 +85,25 @@
         case BBLocationChooser:
         {
             switch ((BBLocation)choice) {
-                case BBLocationArtery:
-                    name=@"Artery";
-                    *description = @"Fast, high pressured, oxygenated blood flows through arteries from the heart to the rest of the body.";
+                    
+                case BBLocationPulmonaryArtery:
+                    name=@"Pulmonary Artery";
+                    *description = @"Deoxygenated blood straight from the heart's right ventricle travels through the pulmonary vein to the lungs.";
                     break;
                     
-                case BBLocationVein:
-                    name=@"Vein";
-                    *description = @"Slow, low pressure, mostly deoxygenated blood returns through veins back to the heart";
+                case BBLocationPulmonaryVein:
+                    name=@"Pulmonary Vein";
+                    *description = @"Freshly oxygenated blood moves from the lungs, through the pulmonary artery, to the left atrium of the heart.";
+                    break;
+                    
+                case BBLocationCarotidArtery:
+                    name=@"Carotid Artery";
+                    *description = @"The carotid arteries carry oxygenated blood to the brain.";
+                    break;
+                    
+                case BBLocationVenaCava:
+                    name=@"Vena Cava";
+                    *description = @"After blood has circulated around the body, it returns to the heart through the vena cava. This blood is slow, under low pressure, and deoxygenated.";
                     break;
                     
                 default:

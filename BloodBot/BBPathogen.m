@@ -28,7 +28,7 @@
 }
 
 - (id)init {
-    if (self=[self initWithType:BBPathogenBacteria]) {
+    if (self=[self initWithType:BBPathogenTB]) {
         
     }
     return self;
@@ -38,7 +38,7 @@
 
 - (NSString *)imageName {
     if (self.pathogenType==BBPathogenHIV) return @"diamond.png";
-    else if (self.pathogenType==BBPathogenBacteria) return @"bacteria.png";
+    else if (self.pathogenType==BBPathogenTB) return @"bacteria.png";
     else if (self.pathogenType==BBPathogenMalaria) return @"malaria.png";
     return nil;
 }
@@ -55,7 +55,7 @@
         points[3]=CGPointMake(0, -15);
         *count=4;
         return points;
-    } else if (self.pathogenType==BBPathogenBacteria) {
+    } else if (self.pathogenType==BBPathogenTB) {
         static CGPoint points[6];
         points[0]=CGPointMake(-12.5, 7.5);
         points[1]=CGPointMake(-22.5, 0);
@@ -70,7 +70,7 @@
 }
 
 - (SKPhysicsBody *)physicsBody {
-    if (self.pathogenType==BBPathogenBacteria||self.pathogenType==BBPathogenHIV) {
+    if (self.pathogenType==BBPathogenTB||self.pathogenType==BBPathogenHIV) {
         return [super physicsBody];
     }
     

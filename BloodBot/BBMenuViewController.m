@@ -9,10 +9,13 @@
 #import "BBMenuViewController.h"
 #import "BBMyScene.h"
 #import "BBButtonView.h"
-
+#import <iAd/iAd.h>
 #import "BBChooserViewController.h"
+#import "BBViewController.h"
 
-@interface BBMenuViewController () <BBButtonDelegate, BBChooserDelegate>
+#define HIGH_SCORE_KEY @"High scores for each level"
+
+@interface BBMenuViewController () <BBButtonDelegate, BBChooserDelegate, BBGameDelegate>
 
 @property BOOL loaded;
 
@@ -23,6 +26,40 @@
 @end
 
 @implementation BBMenuViewController
+
+- (void)gameOver:(BBViewController *)vc {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)gameHasScore:(int)score {
+    [self scoreAchieved:score];
+}
+
+- (NSString *)levelHash {
+    BBLevelType levelType;
+    levelType.person=self.personSelected;
+    levelType.pathogenType=self.pathogenSelected;
+    levelType.location=self.locationSelected;
+    return [[NSNumber numberWithInteger:levelHash(levelType)] description];
+}
+
+//for current level
+- (void)scoreAchieved:(int)score {
+    if (score>[self highScore]) {
+        NSMutableDictionary *dict = [[[NSUserDefaults standardUserDefaults] dictionaryForKey:HIGH_SCORE_KEY] mutableCopy];
+        if (!dict) dict = [NSMutableDictionary dictionary];
+        [dict setObject:[NSNumber numberWithInt:score] forKey:self.levelHash];
+        [[NSUserDefaults standardUserDefaults] setObject:dict forKey:HIGH_SCORE_KEY];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        self.highScoreLabel.text=[NSString stringWithFormat:@"High score for these settings: %d", [self highScore]];
+    }
+}
+
+//for current level
+- (int)highScore {
+    NSDictionary *dict = [[NSUserDefaults standardUserDefaults] dictionaryForKey:HIGH_SCORE_KEY];
+    return [[dict objectForKey:self.levelHash] intValue];
+}
 
 - (void)chooser:(BBChooserViewController *)chooser chose:(int)chosen named:(NSString *)choiceName {
     if (chooser.chooserType==BBPersonChooser) {
@@ -35,6 +72,7 @@
         self.pathogenSelected=chosen;
         self.pathogenLabel.text=choiceName;
     }
+    self.highScoreLabel.text=[NSString stringWithFormat:@"High score for these settings: %d", [self highScore]];
 }
 
 - (void)buttonPressed:(BBButtonView *)button {
@@ -48,6 +86,7 @@
         levelType.pathogenType=self.pathogenSelected;
         levelType.location=self.locationSelected;
         [segue.destinationViewController setLevelType:levelType];
+        [segue.destinationViewController setDelegate:self];
     } else {
         BBChooserViewController *chooser = segue.destinationViewController;
         chooser.chooserType=(BBChooserType)sender.tag;
@@ -92,9 +131,14 @@
         self.loaded=YES;
         int size = self.view.bounds.size.width;
         self.personSelected=BBPersonAverage;
-        self.locationSelected=BBLocationVein;
-        self.pathogenSelected=BBPathogenBacteria;
+        self.locationSelected=BBLocationVenaCava;
+        self.pathogenSelected=BBPathogenTB;
         [self makeButton:@"Play" center:CGPointMake(size/2, CHOICE_CENTER+100) type:0];
+        ADBannerView *ad = [[ADBannerView alloc] initWithAdType:ADAdTypeBanner];
+        [self.view addSubview:ad];
+        ad.bounds = CGRectMake(0, 0, 66, 1024);
+        ad.center = CGPointMake(size/2, self.view.bounds.size.height-33);
+        self.highScoreLabel.text=[NSString stringWithFormat:@"High score for these settings: %d", [self highScore]];
     }
     [self.view layoutSubviews];
 }

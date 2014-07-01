@@ -16,4 +16,8 @@
 //designated Initializer. call init to make a bacterium
 - initWithType:(BBPathogenType)pathogenType;
 
+@property int redBloodCellsAbsorbed;//player can steal energy eaten by pathogens!
+
+@property BOOL resistant;//to being attacked by player
+
 @end

@@ -10,7 +10,6 @@
 		9B79D47718D008C300A1FC7C /* BBButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B79D47618D008C300A1FC7C /* BBButtonView.m */; };
 		9B79D47918D0DC4800A1FC7C /* bacteria.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B79D47818D0DC4800A1FC7C /* bacteria.png */; };
 		9B79D47B18D0ED8100A1FC7C /* infectedWBC.png in Resources */ = {isa = PBXBuildFile; fileRef = 9B79D47A18D0ED8100A1FC7C /* infectedWBC.png */; };
-		9BA2D55918C8FAE10000627D /* red-circle-hi.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BA2D55818C8FAE10000627D /* red-circle-hi.png */; };
 		9BA2D55B18C92F560000627D /* capsule.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BA2D55A18C92F560000627D /* capsule.png */; };
 		9BA2D55E18CA51310000627D /* BBMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA2D55D18CA51310000627D /* BBMenuViewController.m */; };
 		9BA2D56118CA905F0000627D /* BBObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA2D56018CA905F0000627D /* BBObject.m */; };
@@ -20,14 +19,16 @@
 		9BA2D56D18CAA0B70000627D /* BBPathogen.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BA2D56C18CAA0B70000627D /* BBPathogen.m */; };
 		9BA2D56F18CAA8A50000627D /* th.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BA2D56E18CAA8A50000627D /* th.png */; };
 		9BA2D57118CAAA750000627D /* diamond.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BA2D57018CAAA750000627D /* diamond.png */; };
-		9BA5263718CF814500CED268 /* Blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BA5263618CF814500CED268 /* Blue.png */; };
 		9BA735A418CEAE43004C1EED /* WBC.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BA735A318CEAE43004C1EED /* WBC.png */; };
-		9BDEFDFC18D3FFDC004A3BC4 /* blueSickle.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BDEFDFA18D3FFDC004A3BC4 /* blueSickle.png */; };
-		9BDEFDFD18D3FFDC004A3BC4 /* redSickle.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BDEFDFB18D3FFDC004A3BC4 /* redSickle.png */; };
 		9BDEFE0018D4008D004A3BC4 /* BBGameOverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BDEFDFF18D4008D004A3BC4 /* BBGameOverViewController.m */; };
 		9BDEFE0218D40483004A3BC4 /* malaria.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BDEFE0118D40483004A3BC4 /* malaria.png */; };
-		9BDEFE0418D40CBA004A3BC4 /* malariaRed.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BDEFE0318D40CBA004A3BC4 /* malariaRed.png */; };
 		9BE26574193A17DA006673D7 /* BBChooserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BE26573193A17DA006673D7 /* BBChooserViewController.m */; };
+		9BE92B55194B6A5A009A3813 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BE92B54194B6A5A009A3813 /* iAd.framework */; };
+		9BE92B57194B7242009A3813 /* Blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE92B56194B7242009A3813 /* Blue.png */; };
+		9BE92B59194B72B1009A3813 /* Red.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE92B58194B72B1009A3813 /* Red.png */; };
+		9BE92B5F194B814E009A3813 /* redSickle.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE92B5C194B814E009A3813 /* redSickle.png */; };
+		9BE92B61194B8A26009A3813 /* blueSickle.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE92B60194B8A26009A3813 /* blueSickle.png */; };
+		9BE92B63194B8A2E009A3813 /* malariaRed.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE92B62194B8A2E009A3813 /* malariaRed.png */; };
 		9BED8B5A18C7BD9A004EFAEC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BED8B5918C7BD9A004EFAEC /* Foundation.framework */; };
 		9BED8B5C18C7BD9A004EFAEC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BED8B5B18C7BD9A004EFAEC /* CoreGraphics.framework */; };
 		9BED8B5E18C7BD9A004EFAEC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BED8B5D18C7BD9A004EFAEC /* UIKit.framework */; };
@@ -64,7 +65,6 @@
 		9B79D47618D008C300A1FC7C /* BBButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBButtonView.m; sourceTree = "<group>"; };
 		9B79D47818D0DC4800A1FC7C /* bacteria.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bacteria.png; sourceTree = "<group>"; };
 		9B79D47A18D0ED8100A1FC7C /* infectedWBC.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = infectedWBC.png; sourceTree = "<group>"; };
-		9BA2D55818C8FAE10000627D /* red-circle-hi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-circle-hi.png"; sourceTree = "<group>"; };
 		9BA2D55A18C92F560000627D /* capsule.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = capsule.png; sourceTree = "<group>"; };
 		9BA2D55C18CA51310000627D /* BBMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBMenuViewController.h; sourceTree = "<group>"; };
 		9BA2D55D18CA51310000627D /* BBMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBMenuViewController.m; sourceTree = "<group>"; };
@@ -80,16 +80,18 @@
 		9BA2D56C18CAA0B70000627D /* BBPathogen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBPathogen.m; sourceTree = "<group>"; };
 		9BA2D56E18CAA8A50000627D /* th.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = th.png; sourceTree = "<group>"; };
 		9BA2D57018CAAA750000627D /* diamond.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = diamond.png; sourceTree = "<group>"; };
-		9BA5263618CF814500CED268 /* Blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Blue.png; sourceTree = "<group>"; };
 		9BA735A318CEAE43004C1EED /* WBC.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = WBC.png; sourceTree = "<group>"; };
-		9BDEFDFA18D3FFDC004A3BC4 /* blueSickle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueSickle.png; sourceTree = "<group>"; };
-		9BDEFDFB18D3FFDC004A3BC4 /* redSickle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redSickle.png; sourceTree = "<group>"; };
 		9BDEFDFE18D4008D004A3BC4 /* BBGameOverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBGameOverViewController.h; sourceTree = "<group>"; };
 		9BDEFDFF18D4008D004A3BC4 /* BBGameOverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBGameOverViewController.m; sourceTree = "<group>"; };
 		9BDEFE0118D40483004A3BC4 /* malaria.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = malaria.png; sourceTree = "<group>"; };
-		9BDEFE0318D40CBA004A3BC4 /* malariaRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = malariaRed.png; sourceTree = "<group>"; };
 		9BE26572193A17DA006673D7 /* BBChooserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBChooserViewController.h; sourceTree = "<group>"; };
 		9BE26573193A17DA006673D7 /* BBChooserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBChooserViewController.m; sourceTree = "<group>"; };
+		9BE92B54194B6A5A009A3813 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
+		9BE92B56194B7242009A3813 /* Blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Blue.png; sourceTree = "<group>"; };
+		9BE92B58194B72B1009A3813 /* Red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Red.png; sourceTree = "<group>"; };
+		9BE92B5C194B814E009A3813 /* redSickle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = redSickle.png; sourceTree = "<group>"; };
+		9BE92B60194B8A26009A3813 /* blueSickle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blueSickle.png; sourceTree = "<group>"; };
+		9BE92B62194B8A2E009A3813 /* malariaRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = malariaRed.png; sourceTree = "<group>"; };
 		9BED8B5618C7BD9A004EFAEC /* BloodBot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BloodBot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BED8B5918C7BD9A004EFAEC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9BED8B5B18C7BD9A004EFAEC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -122,6 +124,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9BE92B55194B6A5A009A3813 /* iAd.framework in Frameworks */,
 				9BED8B5C18C7BD9A004EFAEC /* CoreGraphics.framework in Frameworks */,
 				9BED8B5E18C7BD9A004EFAEC /* UIKit.framework in Frameworks */,
 				9BED8B6018C7BD9A004EFAEC /* SpriteKit.framework in Frameworks */,
@@ -164,6 +167,7 @@
 		9BED8B5818C7BD9A004EFAEC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9BE92B54194B6A5A009A3813 /* iAd.framework */,
 				9BED8B5918C7BD9A004EFAEC /* Foundation.framework */,
 				9BED8B5B18C7BD9A004EFAEC /* CoreGraphics.framework */,
 				9BED8B5D18C7BD9A004EFAEC /* UIKit.framework */,
@@ -197,16 +201,16 @@
 				9BEDD3ED18C8479E002CED3A /* shuttle2.png */,
 				9BA2D57018CAAA750000627D /* diamond.png */,
 				9BA2D55A18C92F560000627D /* capsule.png */,
-				9BA2D55818C8FAE10000627D /* red-circle-hi.png */,
 				9BA2D56E18CAA8A50000627D /* th.png */,
 				9BA735A318CEAE43004C1EED /* WBC.png */,
-				9BA5263618CF814500CED268 /* Blue.png */,
+				9BE92B58194B72B1009A3813 /* Red.png */,
+				9BE92B56194B7242009A3813 /* Blue.png */,
 				9B79D47818D0DC4800A1FC7C /* bacteria.png */,
 				9B79D47A18D0ED8100A1FC7C /* infectedWBC.png */,
-				9BDEFDFA18D3FFDC004A3BC4 /* blueSickle.png */,
-				9BDEFDFB18D3FFDC004A3BC4 /* redSickle.png */,
 				9BDEFE0118D40483004A3BC4 /* malaria.png */,
-				9BDEFE0318D40CBA004A3BC4 /* malariaRed.png */,
+				9BE92B5C194B814E009A3813 /* redSickle.png */,
+				9BE92B62194B8A2E009A3813 /* malariaRed.png */,
+				9BE92B60194B8A26009A3813 /* blueSickle.png */,
 				9BED8B7B18C7BD9A004EFAEC /* Images.xcassets */,
 				9BED8B6218C7BD9A004EFAEC /* Supporting Files */,
 			);
@@ -337,21 +341,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BED8B7A18C7BD9A004EFAEC /* Spaceship.png in Resources */,
-				9BDEFE0418D40CBA004A3BC4 /* malariaRed.png in Resources */,
+				9BE92B63194B8A2E009A3813 /* malariaRed.png in Resources */,
+				9BE92B61194B8A26009A3813 /* blueSickle.png in Resources */,
 				9BA2D56F18CAA8A50000627D /* th.png in Resources */,
 				9BED8B7C18C7BD9A004EFAEC /* Images.xcassets in Resources */,
+				9BE92B5F194B814E009A3813 /* redSickle.png in Resources */,
 				9B79D47918D0DC4800A1FC7C /* bacteria.png in Resources */,
-				9BA5263718CF814500CED268 /* Blue.png in Resources */,
 				9BEDD3EE18C8479E002CED3A /* shuttle2.png in Resources */,
-				9BDEFDFD18D3FFDC004A3BC4 /* redSickle.png in Resources */,
 				9BA2D55B18C92F560000627D /* capsule.png in Resources */,
 				9BED8B7218C7BD9A004EFAEC /* Main_iPad.storyboard in Resources */,
+				9BE92B57194B7242009A3813 /* Blue.png in Resources */,
 				9B79D47B18D0ED8100A1FC7C /* infectedWBC.png in Resources */,
 				9BA2D57118CAAA750000627D /* diamond.png in Resources */,
-				9BDEFDFC18D3FFDC004A3BC4 /* blueSickle.png in Resources */,
-				9BA2D55918C8FAE10000627D /* red-circle-hi.png in Resources */,
 				9BA735A418CEAE43004C1EED /* WBC.png in Resources */,
 				9BDEFE0218D40483004A3BC4 /* malaria.png in Resources */,
+				9BE92B59194B72B1009A3813 /* Red.png in Resources */,
 				9BED8B6F18C7BD9A004EFAEC /* Main_iPhone.storyboard in Resources */,
 				9BED8B6618C7BD9A004EFAEC /* InfoPlist.strings in Resources */,
 			);
@@ -458,7 +462,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: christopher danilek (W327C25K3N)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -477,7 +481,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "B61F0A47-5070-46B9-953E-B09343896B38";
+				PROVISIONING_PROFILE = "5CB627D6-B527-491C-9171-B8234C8C8B78";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -499,7 +503,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: christopher danilek (W327C25K3N)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -511,7 +515,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PROVISIONING_PROFILE = "B61F0A47-5070-46B9-953E-B09343896B38";
+				PROVISIONING_PROFILE = "5CB627D6-B527-491C-9171-B8234C8C8B78";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -527,7 +531,7 @@
 				GCC_PREFIX_HEADER = "BloodBot/BloodBot-Prefix.pch";
 				INFOPLIST_FILE = "BloodBot/BloodBot-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B61F0A47-5070-46B9-953E-B09343896B38";
+				PROVISIONING_PROFILE = "5CB627D6-B527-491C-9171-B8234C8C8B78";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
@@ -543,7 +547,7 @@
 				GCC_PREFIX_HEADER = "BloodBot/BloodBot-Prefix.pch";
 				INFOPLIST_FILE = "BloodBot/BloodBot-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B61F0A47-5070-46B9-953E-B09343896B38";
+				PROVISIONING_PROFILE = "5CB627D6-B527-491C-9171-B8234C8C8B78";
 				SPRITEKIT_TEXTURE_ATLAS_OUTPUT = YES;
 				TARGETED_DEVICE_FAMILY = 2;
 				WRAPPER_EXTENSION = app;
