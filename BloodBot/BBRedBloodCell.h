@@ -24,8 +24,6 @@ static BOOL isSickle(BBPerson person) {
 
 - (void)infectWithMalaria;
 - (BOOL)infectedMalaria;
-//- (void)runAction:(SKAction *)action;
-
-- (BOOL)shouldBecomeMalaria;
+@property BOOL resistant;//for malaria
 
 @end

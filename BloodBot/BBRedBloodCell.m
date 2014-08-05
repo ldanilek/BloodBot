@@ -13,7 +13,6 @@
 
 @property SKSpriteNode *node;
 @property BOOL malaria;
-@property NSDate *infectionDate;
 
 @end
 
@@ -33,12 +32,7 @@
         }
         self.node.texture=malarialTexture;
         self.node.physicsBody.mass=.02;
-        self.infectionDate = [NSDate date];
     }
-}
-
-- (BOOL)shouldBecomeMalaria {
-    return [[NSDate date] timeIntervalSinceDate:self.infectionDate] > 10;
 }
 
 #define OXYGENATED_MASS .0035
@@ -56,11 +50,11 @@
         }
         static SKTexture *deoxygenatedSickleTexture;
         if (!deoxygenatedSickleTexture) {
-            deoxygenatedSickleTexture=[SKTexture textureWithImageNamed:@"blueSickle.png"];
+            deoxygenatedSickleTexture=[SKTexture textureWithImageNamed:@"sickledBlue.png"];
         }
         static SKTexture *oxygenatedSickleTexture;
         if (!oxygenatedSickleTexture) {
-            oxygenatedSickleTexture=[SKTexture textureWithImageNamed:@"redSickle.png"];
+            oxygenatedSickleTexture=[SKTexture textureWithImageNamed:@"sickledRed.png"];
         }
         if (oxygenated&&sickled) self.node.texture=oxygenatedSickleTexture;
         else if (oxygenated) self.node.texture=oxygenatedTexture;
@@ -99,7 +93,67 @@
 }
 
 - (double)radius {
+    if (self.sickled) return 0;
     return 15;
+}
+
+- (CGSize)imageSize {
+    if (self.sickled) {
+        return CGSizeMake(20, 30);
+    }
+    return CGSizeMake(30, 30);
+}
+
+#define EVENTUAL_HEIGHT 30.0
+#define EVENTUAL_WIDTH 20.0
+#define SICKLE_HEIGHT 187.0
+#define SCALE_DOWN_FACTOR EVENTUAL_HEIGHT/SICKLE_HEIGHT
+#define CENTER_DIFF 72.0
+#define SICKLE_RADIUS SICKLE_HEIGHT/2.0
+#define OUTER_CENTER SICKLE_RADIUS
+#define INNER_CENTER OUTER_CENTER+CENTER_DIFF
+
+#define MAX_POINTS 100
+- (CGPoint *)outline:(int *)count {
+    if (self.sickled) {
+        static CGPoint *initialPoint;
+        static int totalCount = 0;
+        if (!initialPoint) {
+            __block CGPoint *points = malloc(sizeof(CGPoint)*MAX_POINTS);
+            initialPoint = points;
+            __block int runningCount = 0;
+            const float heightAtTips = sqrtf(SICKLE_RADIUS*SICKLE_RADIUS - CENTER_DIFF*CENTER_DIFF/4.0);
+            //start with outside ring
+            void(^goToPoint)(float, float) = ^(float x, float y) {
+                *points = CGPointMake(x*SCALE_DOWN_FACTOR-EVENTUAL_WIDTH/2, y*SCALE_DOWN_FACTOR-EVENTUAL_HEIGHT/2);
+                points++;
+                runningCount++;
+            };
+            void(^goToOuterAngle)(float) = ^(float angle) {
+                goToPoint(OUTER_CENTER+SICKLE_RADIUS*cosf(angle), SICKLE_RADIUS+SICKLE_RADIUS*sinf(angle));
+            };
+            void(^goToInnerAngle)(float) = ^(float angle) {
+                goToPoint(INNER_CENTER+SICKLE_RADIUS*cosf(angle), SICKLE_RADIUS+SICKLE_RADIUS*sinf(angle));
+            };
+            //outside ring starts at angle from (outer_center, sickle_radius) to (outer_center+center_diff/2, sickle_radius+heightAtTips)
+            float startingAngle = atan2f(heightAtTips, CENTER_DIFF/2);
+            float endingAngle = -startingAngle+2*M_PI;
+            for (double angle = startingAngle; angle<endingAngle-0.05; angle+=0.6) {
+                goToOuterAngle(angle);
+            }
+            //now do the inside ring. go from negative to positive
+            endingAngle = M_PI-startingAngle;
+            startingAngle = 2*M_PI-endingAngle;
+            for (double angle=startingAngle; angle>endingAngle+0.05; angle-=.4) {
+                goToInnerAngle(angle);
+            }
+            totalCount=runningCount;
+        }
+        *count=totalCount;
+        assert(totalCount<MAX_POINTS);
+        return initialPoint;
+    }
+    return NULL;
 }
 
 - (instancetype)init {
@@ -111,6 +165,8 @@
 
 - (instancetype)initOxygenated:(BOOL)oxygenated sickle:(BOOL)sickled {
     if (self=[super init]) {
+        _oxygenated=oxygenated;
+        _sickled=sickled;
         self.oxygenated=oxygenated;
         self.sickled=sickled;
         self.node.physicsBody.restitution=1;

@@ -16,4 +16,6 @@
 @property (nonatomic, weak) IBOutlet UILabel *pathogenLabel;
 @property (nonatomic, weak) IBOutlet UILabel *highScoreLabel;
 
+@property (nonatomic, weak) IBOutlet UIScrollView *tutorialsView;
+
 @end

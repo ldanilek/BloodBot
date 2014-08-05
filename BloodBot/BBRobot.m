@@ -45,6 +45,7 @@
         self.node.physicsBody.angularDamping=8;//technically this should be between 0 and 1. higher is better, though
         self.node.physicsBody.linearDamping=.5;
         self.node.anchorPoint=CGPointMake(0.5, .5);
+        self.node.physicsBody.usesPreciseCollisionDetection=YES;
     }
     return self;
 }

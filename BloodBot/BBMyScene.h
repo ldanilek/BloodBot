@@ -24,6 +24,7 @@
 - (void)viewDidAppear;
 
 @property (nonatomic) BBLevelType levelType;
+@property (strong, nonatomic) NSString *tutorialName;
 
 @property (nonatomic) BOOL stopped;
 

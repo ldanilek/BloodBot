@@ -22,5 +22,6 @@
 @interface BBViewController : UIViewController
 
 @property (weak) id <BBGameDelegate> delegate;
+@property (strong, nonatomic) NSString *tutorialName;
 
 @end

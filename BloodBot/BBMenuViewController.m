@@ -76,17 +76,22 @@
 }
 
 - (void)buttonPressed:(BBButtonView *)button {
-    [self performSegueWithIdentifier:button.text sender:button];
+    [self performSegueWithIdentifier:@"Play" sender:button];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UIView *)sender {
+#define TUTORIALS @[@"Navigation", @"Obstacles", @"Pathogens"]
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(BBButtonView *)sender {
     if ([segue.identifier isEqualToString:@"Play"]) {
         BBLevelType levelType;
         levelType.person=self.personSelected;
         levelType.pathogenType=self.pathogenSelected;
         levelType.location=self.locationSelected;
         [segue.destinationViewController setLevelType:levelType];
-        [segue.destinationViewController setDelegate:self];
+        [(BBViewController *)segue.destinationViewController setDelegate:self];
+        if ([TUTORIALS containsObject:sender.text]) {
+            [segue.destinationViewController setTutorialName:sender.text];
+        }
     } else {
         BBChooserViewController *chooser = segue.destinationViewController;
         chooser.chooserType=(BBChooserType)sender.tag;
@@ -139,6 +144,21 @@
         ad.bounds = CGRectMake(0, 0, 66, 1024);
         ad.center = CGPointMake(size/2, self.view.bounds.size.height-33);
         self.highScoreLabel.text=[NSString stringWithFormat:@"High score for these settings: %d", [self highScore]];
+        
+        int tutorialIndex = 0;
+        int TUTORIAL_WIDTH = 150;
+        int TUTORIAL_PAD = 20;
+        int startX = self.view.bounds.size.width/2-(TUTORIAL_WIDTH*TUTORIALS.count+TUTORIAL_PAD*(TUTORIALS.count-1))/2;
+        for (NSString *tutorialName in TUTORIALS) {
+            CGRect frame = CGRectMake(startX + tutorialIndex*(TUTORIAL_WIDTH+TUTORIAL_PAD), 10, TUTORIAL_WIDTH, 50);
+            BBButtonView *tutorialButton = [[BBButtonView alloc] initWithFrame:frame];
+            tutorialButton.text=tutorialName;
+            [self.tutorialsView addSubview:tutorialButton];
+            tutorialButton.buttonColor=[UIColor redColor];
+            tutorialButton.textColor=[UIColor whiteColor];
+            tutorialButton.delegate=self;
+            tutorialIndex++;
+        }
     }
     [self.view layoutSubviews];
 }

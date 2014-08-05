@@ -13,8 +13,11 @@
 //don't change after initialization
 @property (nonatomic) BBPathogenType pathogenType;
 
-//designated Initializer. call init to make a bacterium
+//convenience initializer. not resistant
 - initWithType:(BBPathogenType)pathogenType;
+
+//designated Initializer. call init to make a bacterium
+- (instancetype)initWithType:(BBPathogenType)pathogenType resistant:(BOOL)resistant;
 
 @property int redBloodCellsAbsorbed;//player can steal energy eaten by pathogens!
 

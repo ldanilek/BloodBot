@@ -18,8 +18,15 @@
 @implementation BBPathogen
 
 - (instancetype)initWithType:(BBPathogenType)pathogenType {
+    if (self=[self initWithType:pathogenType resistant:NO]) {
+    }
+    return self;
+}
+
+- (instancetype)initWithType:(BBPathogenType)pathogenType resistant:(BOOL)resistant {
     if (self=[super init]) {
         self.pathogenType=pathogenType;
+        self.resistant=resistant;
         self.node.physicsBody.restitution=0;
         self.node.physicsBody.linearDamping=.05;
         self.node.physicsBody.contactTestBitMask=3;
@@ -38,7 +45,9 @@
 
 - (NSString *)imageName {
     if (self.pathogenType==BBPathogenHIV) return @"diamond.png";
+    else if (self.pathogenType==BBPathogenTB && self.resistant) return @"TBResistant.png";
     else if (self.pathogenType==BBPathogenTB) return @"bacteria.png";
+    else if (self.pathogenType==BBPathogenMalaria && self.resistant) return @"MalariaResistant.png";
     else if (self.pathogenType==BBPathogenMalaria) return @"malaria.png";
     return nil;
 }

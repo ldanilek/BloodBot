@@ -25,6 +25,8 @@ static double uniform(double min, double max) {
 //@property (strong, nonatomic) SKSpriteNode *pathogenProportion;
 @property (strong, nonatomic) SKLabelNode *pathogenLabel;
 @property (strong, nonatomic) SKLabelNode *scoreLabel;
+@property (strong, nonatomic) SKLabelNode *tutorialLabel;
+@property int tutorialMessage;
 
 @property double playerPower;
 @property (strong, nonatomic) SKLabelNode *powerLabel;
@@ -33,6 +35,8 @@ static double uniform(double min, double max) {
 
 @property CFTimeInterval playingTime;//goes up from zero
 @property CFTimeInterval currentTime;//system time of last frame
+
+@property (nonatomic) double speedMultiplier;
 
 @end
 
@@ -64,6 +68,9 @@ static double uniform(double min, double max) {
 }
 
 - (SKLabelNode *)pathogenLabel {
+    if ([self.tutorialName isEqualToString:@"Navigation"]||[self.tutorialName isEqualToString:@"Obstacles"]) {
+        return nil;
+    }
     if (!_pathogenLabel) {
         _pathogenLabel=[[SKLabelNode alloc] initWithFontNamed:BBFONT];
         _pathogenLabel.fontSize=15;
@@ -74,6 +81,9 @@ static double uniform(double min, double max) {
 }
 
 - (SKLabelNode *)scoreLabel {
+    if ([self.tutorialName isEqualToString:@"Navigation"]) {
+        return nil;
+    }
     if (!_scoreLabel) {
         _scoreLabel=[[SKLabelNode alloc] initWithFontNamed:BBFONT];
         _scoreLabel.fontSize=15;
@@ -113,10 +123,15 @@ static double uniform(double min, double max) {
     return _pathogens;
 }
 
-//resistance probability grows for TB with every killed cell.
+//resistance probability grows with every killed cell.
 - (double)resistanceProbability {
-    //graph this to see what it looks like. X from 0 to 40. Y from 0 to 1
-    return 2/(1+exp(-.05*self.pathogensKilled))-1;
+    //graph this to see what it looks like. X from 0 to 100. Y from 0 to 1
+    if (self.levelType.pathogenType==BBPathogenTB) {
+        return 2/(1+exp(-.02*self.pathogensKilled))-1;
+    } else if (self.levelType.pathogenType==BBPathogenMalaria) {
+        return 2/(1+exp(-.003*self.pathogensKilled))-1;
+    }
+    return 0;
 }
 
 - (void)didBeginContact:(SKPhysicsContact *)contact {
@@ -179,6 +194,7 @@ static double uniform(double min, double max) {
             BBRedBloodCell *red = (BBRedBloodCell *)[pathogen otherObjectInCollision:contact possibleObjects:self.redBloodCells];
             if (pathogen.pathogenType==BBPathogenMalaria) {
                 [red infectWithMalaria];
+                red.resistant=pathogen.resistant;
             } else {
                 if (red.oxygenated) {
                     pathogen.redBloodCellsAbsorbed++;
@@ -288,13 +304,15 @@ static double uniform(double min, double max) {
 
 - (void)setPathogensMissed:(int)pathogensMissed {
     if (_pathogensMissed!=pathogensMissed) {
+        int increase = pathogensMissed-_pathogensMissed;
         _pathogensMissed=pathogensMissed;
         [self setPathogenGraphics];
         if (pathogensMissed>=self.startingLives) {
             [[NSNotificationCenter defaultCenter] performSelector:@selector(postNotification:) withObject:[NSNotification notificationWithName:PLAYER_DESTROYED object:[NSString stringWithFormat:@"%@'s %@ can't just keep absorbing pathogens. You caught %d, but let %d past your defenses.", self.personsName, self.organProtecting, self.pathogensKilled, self.pathogensMissed]] afterDelay:0];
             [NSObject cancelPreviousPerformRequestsWithTarget:self];
         }
-        self.plasma.speed*=1.05;
+        self.plasma.speed*=pow(1.05, increase);
+        self.speedMultiplier*=pow(1.05, increase);
     }
 }
 
@@ -368,11 +386,11 @@ static double uniform(double min, double max) {
 }
 
 - (void)addPathogen {
-    BBPathogen *pathogen = [[BBPathogen alloc] initWithType:self.levelType.pathogenType];
+    BOOL willBeResistant = ( uniform(0, 1) < [self resistanceProbability] );
+    BBPathogen *pathogen = [[BBPathogen alloc] initWithType:self.levelType.pathogenType resistant:willBeResistant];
     pathogen.delegate=self;
     pathogen.position=[self randomRightPlasmaLocation];
     NSLog(@"new pathogen with %g chance of resistance", [self resistanceProbability]);
-    pathogen.resistant = pathogen.pathogenType==BBPathogenTB && ( uniform(0, 1) < [self resistanceProbability] );
     
     [pathogen addToNode:self.plasma];
     [self.pathogens addObject:pathogen];
@@ -383,7 +401,10 @@ static double uniform(double min, double max) {
 }
 
 - (double)speedMultiplier {
-    return bloodSpeed(self.levelType.location);
+    if (!_speedMultiplier) {
+        _speedMultiplier = bloodSpeed(self.levelType.location);
+    }
+    return _speedMultiplier;
 }
 
 #define WAIT_BETWEEN_ADDING .2
@@ -393,9 +414,15 @@ static double uniform(double min, double max) {
     return freq;
 }
 - (double)whiteCellFrequency {
+    if ([self.tutorialName isEqualToString:@"Navigation"]) {
+        return 0;
+    }
     return .5 * self.speedMultiplier;
 }
 - (double)pathogenFrequency {
+    if ([self.tutorialName isEqualToString:@"Navigation"]||[self.tutorialName isEqualToString:@"Obstacles"]) {
+        return 0;
+    }
     double freq = 1;
     if (isSickle(self.levelType.person)&&self.levelType.pathogenType==BBPathogenHIV) {
         freq/=5;
@@ -438,7 +465,7 @@ static double uniform(double min, double max) {
         if ([rbc infectedMalaria] && uniform(0, 1)<malariaFrequency) {
             int randomNumber = uniform(MIN_MALARIA_CREATED, MAX_MALARIA_CREATED+1);
             for (int i=0; i<randomNumber; i++) {
-                BBPathogen *malaria = [[BBPathogen alloc] initWithType:BBPathogenMalaria];
+                BBPathogen *malaria = [[BBPathogen alloc] initWithType:BBPathogenMalaria resistant:rbc.resistant];
                 
                 malaria.delegate=self;
                 malaria.position=rbc.position;
@@ -447,7 +474,7 @@ static double uniform(double min, double max) {
                 [malaria addToNode:self.plasma];
                 [self.pathogens addObject:malaria];
             }
-            [rbc remove];
+            [rbc removeNow];
         }
     }
 }
@@ -495,14 +522,14 @@ static double uniform(double min, double max) {
         self.player.position=[self convertPoint:CGPointMake([self playerX], self.size.height/2) toNode:self.plasma];
         
         //create bottom wall
-        SKSpriteNode *bottomWall = [[SKSpriteNode alloc] initWithColor:[SKColor redColor] size:CGSizeMake(size.width*100, 10)];
+        SKSpriteNode *bottomWall = [[SKSpriteNode alloc] initWithColor:[SKColor redColor] size:CGSizeMake(size.width*100, 40)];
         bottomWall.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMinY(self.plasma.frame));
         bottomWall.physicsBody=[SKPhysicsBody bodyWithRectangleOfSize:bottomWall.size];
         bottomWall.physicsBody.dynamic=NO;
         [self addChild:bottomWall];
         
         //create top wall
-        SKSpriteNode *topWall = [[SKSpriteNode alloc] initWithColor:[SKColor redColor] size:CGSizeMake(size.width*100, 10)];
+        SKSpriteNode *topWall = [[SKSpriteNode alloc] initWithColor:[SKColor redColor] size:CGSizeMake(size.width*100, 40)];
         topWall.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMaxY(self.plasma.frame));
         topWall.physicsBody=[SKPhysicsBody bodyWithRectangleOfSize:topWall.size];
         topWall.physicsBody.dynamic=NO;
@@ -518,12 +545,55 @@ static double uniform(double min, double max) {
         self.physicsWorld.contactDelegate=self;
         
         //create run loop for creating new objects
-        [self createObjects];
+        [self performSelector:@selector(createObjects) withObject:nil afterDelay:WAIT_BETWEEN_ADDING];
     }
     return self;
 }
 
+- (void)setTutorialName:(NSString *)tutorialName {
+    _tutorialName=tutorialName;
+    if (tutorialName!=nil) {
+        SKLabelNode *label = [[SKLabelNode alloc] initWithFontNamed:BBFONT];
+        label.text=tutorialName;
+        label.fontSize=25;
+        label.position=CGPointMake(self.size.width/2, 30);
+        label.color=[SKColor whiteColor];
+        [self addChild:label];
+        self.tutorialLabel = label;
+        [self performSelector:@selector(displayTutorialMessage) withObject:nil afterDelay:2];
+    }
+}
 
+- (void)displayTutorialMessage {
+    if (self.tutorialMessage<self.tutorialMessages.count) {
+        self.tutorialLabel.text = self.tutorialMessages[self.tutorialMessage];
+        self.tutorialMessage++;
+        [self performSelector:@selector(displayTutorialMessage) withObject:nil afterDelay:8];
+    }
+}
+
+- (NSArray *)tutorialMessages {
+    if ([self.tutorialName isEqualToString:@"Navigation"]) {
+        return @[@"You are controlling a blue robot in someone's bloodstream", @"Hold down your finger to attract the robot", @"Hold farther from the robot to pull harder", @"Bump into oxygenated red blood cells to increase fuel", @"When you have more fuel, you pull harder", @"The harder you pull, the faster you use up your fuel", @"Pause at any time by tapping with two fingers", @"You can bounce off the top and bottom, but don't go too far left", @"The bloodstream travels at different speeds in different parts of the body", @""];
+    } else if ([self.tutorialName isEqualToString:@"Obstacles"]) {
+        return @[@"White blood cells identify invaders, like robots, and destroy them", @"Avoid white blood cells as much as possible", @""];
+    } else if ([self.tutorialName isEqualToString:@"Pathogens"]) {
+        NSMutableArray *messages = [NSMutableArray arrayWithObjects:@"Pathogens and infected cells are orange with a green center", @"Your mission is to destroy as many pathogens as possible", @"Bounce the BloodBot against pathogens to destroy them", @"You lose lives when pathogens or infected cells escape", nil];
+        if (self.levelType.pathogenType==BBPathogenHIV) {
+            [messages addObject:@"HIV pathogens infect and reproduce through white blood cells"];
+        } else {
+            [messages addObject:@"White blood cells also destroy pathogens on contact"];
+            [messages addObject:@"The more pathogens you kill, the more new pathogens will be resistant"];
+            [messages addObject:@"Resistant pathogens have a blue outline"];
+            [messages addObject:@"They can only be killed by white blood cells, not the BloodBot"];
+        }
+        [messages addObject:@"Like the BloodBot, pathogens also absorb oxygen from red blood cells"];
+        [messages addObject:@"When you kill a pathogen, you get all of the fuel it had absorbed"];
+        [messages addObject:@""];
+        return [messages copy];
+    }
+    return nil;
+}
 
 - (void)setLevelType:(BBLevelType)levelType {
     _levelType=levelType;
@@ -542,7 +612,7 @@ static double uniform(double min, double max) {
 - (void)viewDidAppear {
     [self movePlasma];
     self.previousScore=-1;
-    self.pathogensKilled=0;
+    //self.pathogensKilled=0;
     [self performSelector:@selector(pathogenLabel) withObject:nil afterDelay:.01];
 }
 

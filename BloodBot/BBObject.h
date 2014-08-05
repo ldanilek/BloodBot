@@ -48,15 +48,15 @@ typedef enum {
 static double bloodSpeed(BBLocation location) {
     switch (location) {
         case BBLocationCarotidArtery://from the left ventricle. strongest
-            return 5;
-            break;
-            
-        case BBLocationPulmonaryArtery://from the right ventricle. strong
             return 4;
             break;
             
-        case BBLocationPulmonaryVein://from the lungs. not too strong
+        case BBLocationPulmonaryArtery://from the right ventricle. strong
             return 3;
+            break;
+            
+        case BBLocationPulmonaryVein://from the lungs. not too strong
+            return 2;
             break;
 
         case BBLocationVenaCava://from the body. not strong at all
@@ -88,7 +88,7 @@ static BBLevelType unhashLevel(NSUInteger hash) {
     level.pathogenType = hash % PRIME_NUM;
     hash /= PRIME_NUM;
     level.location = hash % PRIME_NUM;
-    level.person = hash/PRIME_NUM;
+    level.person = (BBPerson)hash/PRIME_NUM;
     return level;
 }
 
@@ -114,6 +114,7 @@ static BBLevelType unhashLevel(NSUInteger hash) {
 
 - (void)addToNode:(SKNode *)node;
 - (void)remove;
+- (void)removeNow;//immediately. don't shrink first
 @property (nonatomic) CGPoint position;
 @property (nonatomic) CGVector velocity;//this is calculated every time called so don't call it more than necessary
 @property (nonatomic) double angularVelocity;
@@ -130,6 +131,7 @@ static BBLevelType unhashLevel(NSUInteger hash) {
 - (CGPoint *)outline:(int *)count;//counterclockwise and not self-intersecting
 - (NSString *)imageName;
 - (double)radius;//for physicsbody only. if 0 (default), not circular
+- (CGSize)imageSize;//for image. if imageName is nil, this is used
 
 @property (strong, nonatomic) SKNode *node;
 - (SKPhysicsBody *)physicsBody;
