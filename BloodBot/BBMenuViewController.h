@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "BBButtonView.h"
-#import <iAd/ADBannerView.h>
+
 
 @interface BBMenuViewController : UIViewController
 
@@ -18,7 +18,5 @@
 @property (nonatomic, weak) IBOutlet UILabel *highScoreLabel;
 
 @property (nonatomic, weak) IBOutlet UIScrollView *tutorialsView;
-
-@property (strong, nonatomic) ADBannerView *adView;
 
 @end

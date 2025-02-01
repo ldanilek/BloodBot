@@ -14,7 +14,7 @@
 
 #define HIGH_SCORE_KEY @"High scores for each level"
 
-@interface BBMenuViewController () <BBButtonDelegate, BBChooserDelegate, BBGameDelegate, ADBannerViewDelegate>
+@interface BBMenuViewController () <BBButtonDelegate, BBChooserDelegate, BBGameDelegate>
 
 @property BOOL loaded;
 
@@ -99,7 +99,7 @@
         levelType.person=self.personSelected;
         levelType.pathogenType=self.pathogenSelected;
         levelType.location=self.locationSelected;
-        [segue.destinationViewController setLevelType:levelType];
+        [(BBMyScene *)segue.destinationViewController setLevelType:levelType];
         [(BBViewController *)segue.destinationViewController setDelegate:self];
         if ([TUTORIALS containsObject:sender.text]) {
             [segue.destinationViewController setTutorialName:sender.text];
@@ -153,13 +153,13 @@
         [self makeButton:@"Play" center:CGPointMake(size/2, CHOICE_CENTER+100) type:0];
         
         //adview settup
-        self.adView = [[ADBannerView alloc] initWithAdType:ADAdTypeBanner];
-        [self.view addSubview:self.adView];
+        // self.adView = [[ADBannerView alloc] initWithAdType:ADAdTypeBanner];
+        // [self.view addSubview:self.adView];
         CGRect contentFrame = self.view.bounds;
         CGRect bannerFrame = CGRectZero;
-        bannerFrame.size = [self.adView sizeThatFits:contentFrame.size];
-        bannerFrame.origin.y = contentFrame.size.height-bannerFrame.size.height;
-        [self.adView setFrame:bannerFrame];
+        // bannerFrame.size = [self.adView sizeThatFits:contentFrame.size];
+        // bannerFrame.origin.y = contentFrame.size.height-bannerFrame.size.height;
+        // [self.adView setFrame:bannerFrame];
         
         self.highScoreLabel.text=[NSString stringWithFormat:@"High score for these settings: %d", [self highScore]];
         
