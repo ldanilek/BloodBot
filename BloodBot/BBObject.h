@@ -27,14 +27,16 @@ typedef enum {
     BBLocationCarotidArtery,
 } BBLocation;
 
-#define LOCATIONS 4
+//#define LOCATIONS 4
+#define LOCATION_NAMES @[@"Vena Cava", @"Pulmonary Artery", @"Pulmonary Vein", @"Carotid Artery"]
 
 typedef enum {
     BBPersonAverage,
     BBPersonSickle
 } BBPerson;
 
-#define PEOPLE 2
+//#define PEOPLE 2
+#define PEOPLE_NAMES @[@"Sue", @"Larry"]
 
 typedef enum {
     BBPathogenTB,
@@ -42,7 +44,8 @@ typedef enum {
     BBPathogenMalaria,
 } BBPathogenType;
 
-#define PATHOGENS 3
+//#define PATHOGENS 3
+#define PATHOGEN_NAMES @[@"Tuberculosis", @"AIDS", @"Malaria"]
 
 //range of 0 to 5
 static double bloodSpeed(BBLocation location) {
@@ -83,6 +86,7 @@ static NSUInteger levelHash(BBLevelType levelType) {
     return levelType.person*PRIME_NUM*PRIME_NUM + levelType.location*PRIME_NUM + levelType.pathogenType;
 }
 
+//returns default level when hash is 0
 static BBLevelType unhashLevel(NSUInteger hash) {
     BBLevelType level;
     level.pathogenType = hash % PRIME_NUM;

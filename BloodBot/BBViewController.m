@@ -53,7 +53,10 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"GameOver"] || [segue.identifier isEqualToString:@"Pause"]) {
         BBGameOverViewController *gameOver = segue.destinationViewController;
-        if (!self.tutorialName) [self.delegate gameHasScore:self.scene.score];
+        if (!self.tutorialName) {
+            gameOver.highScore=[self.delegate scoreIsHighscore:self.scene.score];
+            [self.delegate gameHasScore:self.scene.score];
+        }
         gameOver.initialImage = self.storedScreenshot;
         gameOver.delegate=self;
         gameOver.justPaused = [segue.identifier isEqualToString:@"Pause"];
@@ -69,7 +72,7 @@
 
 - (void)playerGone:(NSNotification *)gameOverNotification  {
     if (!self.leaving) {
-        if (!self.tutorialName) [self.delegate gameHasScore:self.scene.score];
+        //if (!self.tutorialName) [self.delegate gameHasScore:self.scene.score];
         self.leaving=YES;
         self.scene.physicsWorld.speed=0;
         self.scene.speed=0;
@@ -120,7 +123,7 @@
 
 - (void)showMenu:(UITapGestureRecognizer *)tapper {
     self.scene.stopped=!self.scene.stopped;
-    if (!self.tutorialName) [self.delegate gameHasScore:self.scene.score];
+    //if (!self.tutorialName) [self.delegate gameHasScore:self.scene.score];
     self.scene.touches = 0;
     self.storedScreenshot=[self screenShot];
     [self performSegueWithIdentifier:@"Pause" sender:tapper];

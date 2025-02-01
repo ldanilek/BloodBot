@@ -41,14 +41,13 @@
     switch (self.chooserType) {
         case BBPersonChooser:
         {
+            name = PEOPLE_NAMES[choice];
             switch ((BBPerson)choice) {
                 case BBPersonAverage:
-                    name=@"Sue";
                     *description=@"Sue is a female human with average blood.";
                     break;
                     
                 case BBPersonSickle:
-                    name=@"Larry";
                     *description=@"Larry is young male with Sickle-cell anemia. His shrivelled red blood cells carry less oxygen, but make him resistant to HIV and Malaria.";
                     break;
                     
@@ -60,21 +59,19 @@
             
         case BBPathogenChooser:
         {
+            name=PATHOGEN_NAMES[choice];
             switch ((BBPathogenType)choice) {
                 case BBPathogenTB:
-                    name=@"Tuberculosis";
                     //http://www.buzzle.com/articles/bacterial-blood-infection.html
                     //from wikipedia and cdc.gov/tb
                     *description=@"TB spreads through the air and has a tendency to become resistant to treatment. This bacteria usually infects the lungs but can also attack the brain or other organs.";
                     break;
                     
                 case BBPathogenHIV:
-                    name=@"AIDS";
                     *description = @"Human Immunodeficiency Virus (HIV) causes Acquired ImmunoDeficiency Syndrome (AIDS). The virus corrupts white blood cells to reproduce.";
                     break;
                     
                 case BBPathogenMalaria:
-                    name=@"Malaria";
                     *description = @"Spread by mosquitos, the protozoans which cause Malaria reproduce in the red blood cells.";
                     break;
                     
@@ -86,25 +83,22 @@
             
         case BBLocationChooser:
         {
+            name=LOCATION_NAMES[choice];
             switch ((BBLocation)choice) {
                     
                 case BBLocationPulmonaryArtery:
-                    name=@"Pulmonary Artery";
                     *description = @"Deoxygenated blood straight from the heart's right ventricle travels through the pulmonary artery to the lungs.";
                     break;
                     
                 case BBLocationPulmonaryVein:
-                    name=@"Pulmonary Vein";
                     *description = @"Freshly oxygenated blood moves from the lungs, through the pulmonary vein, to the left atrium of the heart.";
                     break;
                     
                 case BBLocationCarotidArtery:
-                    name=@"Carotid Artery";
                     *description = @"The carotid arteries carry oxygenated blood to the brain.";
                     break;
                     
                 case BBLocationVenaCava:
-                    name=@"Vena Cava";
                     *description = @"After blood has circulated around the body, it returns to the heart through the vena cava. This blood is slow, under low pressure, and deoxygenated.";
                     break;
                     
@@ -143,15 +137,15 @@
 - (int)choiceCount {
     switch (self.chooserType) {
         case BBLocationChooser:
-            return LOCATIONS;
+            return (int)LOCATION_NAMES.count;
             break;
             
             case BBPathogenChooser:
-            return PATHOGENS;
+            return (int)PATHOGEN_NAMES.count;
             break;
             
             case BBPersonChooser:
-            return PEOPLE;
+            return (int)PEOPLE_NAMES.count;
             break;
             
         default:
@@ -169,8 +163,8 @@
 - (void)pagerChanged:(UIPageControl *)pager {
     [self.scrollView scrollRectToVisible:CGRectMake(pager.currentPage*self.view.bounds.size.width, 0, self.view.bounds.size.width, self.view.bounds.size.height) animated:YES];
     NSString *d; NSString *img;
-    NSString *name = [self nameForChoice:pager.currentPage description:&d imageName:&img];
-    [self.delegate chooser:self chose:pager.currentPage named:name];
+    NSString *name = [self nameForChoice:(int)pager.currentPage description:&d imageName:&img];
+    [self.delegate chooser:self chose:(int)pager.currentPage named:name];
 }
 
 - (void)viewDidLayoutSubviews {

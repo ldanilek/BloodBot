@@ -26,5 +26,6 @@
 
 @property BOOL justPaused;//include resume button
 @property NSString *message;//just shown if game over, not just paused
+@property BOOL highScore;//current score is high score
 
 @end

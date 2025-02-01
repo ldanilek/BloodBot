@@ -610,6 +610,10 @@ static double uniform(double min, double max) {
 }
 
 - (void)viewDidAppear {
+    self.view.showsNodeCount=NO;
+    self.view.showsFPS=NO;
+    //self.view.showsPhysics = YES; //this is so useful for debugging collisions!
+    //self.view.showsFields = YES;
     [self movePlasma];
     self.previousScore=-1;
     //self.pathogensKilled=0;

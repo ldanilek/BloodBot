@@ -59,6 +59,15 @@
             resumeButton.text=@"Resume";
             [self.view addSubview:resumeButton];
             resumeButton.delegate=self;
+        } else if (self.highScore) {
+            UILabel *highScoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 800, 100)];
+            highScoreLabel.center=center;
+            highScoreLabel.textAlignment=NSTextAlignmentCenter;
+            [self.view addSubview:highScoreLabel];
+            highScoreLabel.text=@"High Score!";
+            highScoreLabel.textColor=[UIColor whiteColor];
+            highScoreLabel.backgroundColor=[UIColor clearColor];
+            highScoreLabel.font=[UIFont fontWithName:BBFONT size:60];
         } else {
             UITextView *messageLabel = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, 400, 300)];
             messageLabel.editable=NO;

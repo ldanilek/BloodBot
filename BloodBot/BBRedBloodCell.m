@@ -97,21 +97,25 @@
     return 15;
 }
 
+#define SIZE_MULTIPLIER 1.0
 - (CGSize)imageSize {
     if (self.sickled) {
-        return CGSizeMake(20, 30);
+        return CGSizeMake(20*SIZE_MULTIPLIER, 30*SIZE_MULTIPLIER);
     }
     return CGSizeMake(30, 30);
 }
 
-#define EVENTUAL_HEIGHT 30.0
-#define EVENTUAL_WIDTH 20.0
+#define EVENTUAL_HEIGHT 30*SIZE_MULTIPLIER
+#define EVENTUAL_WIDTH 20*SIZE_MULTIPLIER
 #define SICKLE_HEIGHT 187.0
+#define SICKLE_WIDTH 125.0
 #define SCALE_DOWN_FACTOR EVENTUAL_HEIGHT/SICKLE_HEIGHT
-#define CENTER_DIFF 72.0
-#define SICKLE_RADIUS SICKLE_HEIGHT/2.0
-#define OUTER_CENTER SICKLE_RADIUS
-#define INNER_CENTER OUTER_CENTER+CENTER_DIFF
+#define CENTER_DIFF 72.0-10.0
+#define SICKLE_RADIUS ((SICKLE_HEIGHT/2.0)-5.0)
+#define OUTER_CENTER_X ((SICKLE_HEIGHT/2.0)-(SICKLE_WIDTH/2.0))
+#define INNER_CENTER_X ((SICKLE_HEIGHT/2.0)-(SICKLE_WIDTH/2.0)+CENTER_DIFF)
+#define TIP_HEIGHT 86.0
+#define TIP_OFFSET (72.0/2)-3
 
 #define MAX_POINTS 100
 - (CGPoint *)outline:(int *)count {
@@ -122,29 +126,30 @@
             __block CGPoint *points = malloc(sizeof(CGPoint)*MAX_POINTS);
             initialPoint = points;
             __block int runningCount = 0;
-            const float heightAtTips = sqrtf(SICKLE_RADIUS*SICKLE_RADIUS - CENTER_DIFF*CENTER_DIFF/4.0);
+            //const float heightAtTips = sqrtf(SICKLE_RADIUS*SICKLE_RADIUS - CENTER_DIFF*CENTER_DIFF/4.0);
             //start with outside ring
+            //all points input to this block are in uncompressed coordinates, with origin at center of image
             void(^goToPoint)(float, float) = ^(float x, float y) {
-                *points = CGPointMake(x*SCALE_DOWN_FACTOR-EVENTUAL_WIDTH/2, y*SCALE_DOWN_FACTOR-EVENTUAL_HEIGHT/2);
+                *points = CGPointMake(x*SCALE_DOWN_FACTOR, y*SCALE_DOWN_FACTOR);
                 points++;
                 runningCount++;
             };
             void(^goToOuterAngle)(float) = ^(float angle) {
-                goToPoint(OUTER_CENTER+SICKLE_RADIUS*cosf(angle), SICKLE_RADIUS+SICKLE_RADIUS*sinf(angle));
+                goToPoint(OUTER_CENTER_X+SICKLE_RADIUS*cosf(angle), SICKLE_RADIUS*sinf(angle));
             };
             void(^goToInnerAngle)(float) = ^(float angle) {
-                goToPoint(INNER_CENTER+SICKLE_RADIUS*cosf(angle), SICKLE_RADIUS+SICKLE_RADIUS*sinf(angle));
+                goToPoint(INNER_CENTER_X+SICKLE_RADIUS*cosf(angle), SICKLE_RADIUS*sinf(angle));
             };
             //outside ring starts at angle from (outer_center, sickle_radius) to (outer_center+center_diff/2, sickle_radius+heightAtTips)
-            float startingAngle = atan2f(heightAtTips, CENTER_DIFF/2);
+            float startingAngle = atan2f(TIP_HEIGHT, TIP_OFFSET);
             float endingAngle = -startingAngle+2*M_PI;
-            for (double angle = startingAngle; angle<endingAngle-0.05; angle+=0.6) {
+            for (double angle = startingAngle; angle<endingAngle-0.05; angle+=0.5) {
                 goToOuterAngle(angle);
             }
             //now do the inside ring. go from negative to positive
             endingAngle = M_PI-startingAngle;
             startingAngle = 2*M_PI-endingAngle;
-            for (double angle=startingAngle; angle>endingAngle+0.05; angle-=.4) {
+            for (double angle=startingAngle; angle>endingAngle+0.05; angle-=.3) {
                 goToInnerAngle(angle);
             }
             totalCount=runningCount;

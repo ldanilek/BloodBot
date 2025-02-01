@@ -15,6 +15,7 @@
 
 - (void)gameOver:(BBViewController *)vc;
 - (void)gameHasScore:(int)score;
+- (BOOL)scoreIsHighscore:(int)score;
 
 @end
 
